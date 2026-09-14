@@ -14,7 +14,7 @@
             padding: 0;
             text-align: center;
             scroll-behavior: smooth;
-            overflow-x: hidden; /* Previne apariția barei de scroll orizontale în timpul tranzitiilor */
+            overflow-x: hidden;
         }
         
         /* ---------------------------------------------------
@@ -27,24 +27,14 @@
             width: 100vw;
             height: 100vh;
             transform: translateX(-100%);
-            pointer-events: none; /* Lasă click-urile să treacă atunci când e ascuns */
+            pointer-events: none;
         }
         
-        #transition-overlay-1 { 
-            background-color: #e0e0e0; /* Slide-ul Alb/Gri deschis */
-            z-index: 9998; 
-        }
-        #transition-overlay-2 { 
-            background-color: #bb86fc; /* Slide-ul Mov */
-            z-index: 9999; 
-        }
+        #transition-overlay-1 { background-color: #e0e0e0; z-index: 9998; }
+        #transition-overlay-2 { background-color: #bb86fc; z-index: 9999; }
         
-        .slide-active-1 { 
-            animation: slideTransition 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards; 
-        }
-        .slide-active-2 { 
-            animation: slideTransition 1.2s cubic-bezier(0.77, 0, 0.175, 1) 0.15s forwards; 
-        }
+        .slide-active-1 { animation: slideTransition 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+        .slide-active-2 { animation: slideTransition 1.2s cubic-bezier(0.77, 0, 0.175, 1) 0.15s forwards; }
         
         @keyframes slideTransition {
             0% { transform: translateX(-100%); }
@@ -53,23 +43,39 @@
             100% { transform: translateX(100%); }
         }
 
-        /* Animația scurtă folosită DOAR pentru citirea poeziilor una după alta */
+        /* Animație scurtă pentru citirea poeziilor */
         @keyframes fadeInPoem {
             0% { opacity: 0; transform: translateX(10px); }
             100% { opacity: 1; transform: translateX(0); }
         }
-        .animate-poem {
-            animation: fadeInPoem 0.3s ease-out forwards;
-        }
+        .animate-poem { animation: fadeInPoem 0.3s ease-out forwards; }
 
-        /* Bara de navigare */
-        .navbar-container {
+        /* ---------------------------------------------------
+           NAVIGAȚIE (Hamburger + Bară dropdown)
+        ---------------------------------------------------- */
+        .navbar-wrapper {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 25px; 
             z-index: 9000;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Iconița cu 3 linii */
+        .hamburger-icon {
+            background-color: rgba(20, 18, 24, 0.85);
+            color: #bb86fc;
+            padding: 10px 25px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border-radius: 0 0 15px 15px;
+            border: 1px solid #bb86fc;
+            border-top: none;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         .navbar {
@@ -84,9 +90,16 @@
             padding: 15px 0;
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             backdrop-filter: blur(5px);
+            border-bottom: 1px solid #bb86fc;
         }
 
-        .navbar-container:hover .navbar, .navbar:hover { top: 0; }
+        /* Hover pe container declanșează animațiile */
+        .navbar-wrapper:hover .navbar { top: 0; }
+        .navbar-wrapper:hover .hamburger-icon { 
+            opacity: 0; 
+            transform: translateY(-20px); 
+            pointer-events: none; 
+        }
 
         .navbar a, .dropbtn {
             color: #bb86fc;
@@ -136,14 +149,45 @@
         }
         .dropdown-content a:last-child { border-bottom: none; }
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            padding: 0 20px; 
+        /* ---------------------------------------------------
+           BUTON SCROLL TO TOP
+        ---------------------------------------------------- */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #bb86fc;
+            color: #141218;
+            border: none;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            font-size: 1.8em;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 8000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        #backToTop:hover {
+            background-color: #d1b3ff;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(187, 134, 252, 0.5);
+        }
+
+        /* ---------------------------------------------------
+           STRUCTURA PAGINILOR (Restul codului)
+        ---------------------------------------------------- */
+        .container { max-width: 1100px; margin: auto; padding: 0 20px; }
         .page-section { display: none; }
-        
         h1, h2 { color: #bb86fc; }
 
         .hero-section { 
@@ -154,7 +198,6 @@
             align-items: center;
         }
 
-        /* Secțiunile volumelor pe tot ecranul */
         .vol-section {
             min-height: 100vh;
             width: 100%;
@@ -167,12 +210,7 @@
             background-position: center;
             background-attachment: fixed;
         }
-
-        .vol-section:nth-child(even) {
-            justify-content: flex-end;
-            text-align: right;
-        }
-
+        .vol-section:nth-child(even) { justify-content: flex-end; text-align: right; }
         .vol-section::before {
             content: '';
             position: absolute;
@@ -187,31 +225,13 @@
             max-width: 700px;
             padding: 40px;
             margin: 0 8%;
-            
             opacity: 0;
             transform: translateY(30px);
             transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-
-        .vol-section.in-focus .vol-info {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .vol-titlu { 
-            font-size: 4.5em; 
-            margin-top: 0; 
-            margin-bottom: 10px; 
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-        }
-        
-        .vol-desc { 
-            font-size: 1.5em; 
-            margin-bottom: 40px; 
-            color: #f0f0f0; 
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
-        }
+        .vol-section.in-focus .vol-info { opacity: 1; transform: translateY(0); }
+        .vol-titlu { font-size: 4.5em; margin-top: 0; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
+        .vol-desc { font-size: 1.5em; margin-bottom: 40px; color: #f0f0f0; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
 
         .btn-citeste {
             background-color: #bb86fc;
@@ -228,28 +248,15 @@
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(187, 134, 252, 0.3);
         }
-        .btn-citeste:hover { 
-            background-color: #d1b3ff; 
-            box-shadow: 0 6px 20px rgba(187, 134, 252, 0.6); 
-            transform: translateY(-2px);
-        }
+        .btn-citeste:hover { background-color: #d1b3ff; box-shadow: 0 6px 20px rgba(187, 134, 252, 0.6); transform: translateY(-2px); }
 
-        /* Imagini Fundal */
         #volum-18 { background-image: url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1920&q=80'); }
         #volum-infinit { background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-floralia { 
-            background-image: url('flora.jpg'); 
-            background-position: top center;
-        }
+        #volum-floralia { background-image: url('flora.jpg'); background-position: top center; }
 
         .inner-page-padding { padding-top: 100px; padding-bottom: 60px; }
         
-        .volume-grid {
-            display: flex;
-            gap: 20px;
-            justify-content: space-between;
-            margin-top: 40px;
-        }
+        .volume-grid { display: flex; gap: 20px; justify-content: space-between; margin-top: 40px; }
         .vol-btn {
             flex: 1;
             padding: 80px 20px; 
@@ -300,13 +307,8 @@
         
         .cititor { text-align: left; max-width: 600px; margin: auto; }
         .poezie-text { 
-            white-space: pre-wrap; 
-            font-style: italic; 
-            font-size: 1.25em; 
-            padding: 25px; 
-            border-left: 3px solid #bb86fc; 
-            background: #2a2438; 
-            border-radius: 0 8px 8px 0;
+            white-space: pre-wrap; font-style: italic; font-size: 1.25em; padding: 25px; 
+            border-left: 3px solid #bb86fc; background: #2a2438; border-radius: 0 8px 8px 0; 
         }
         
         .navigatie-cititor { margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 20px; }
@@ -328,7 +330,12 @@
     <div id="transition-overlay-1"></div>
     <div id="transition-overlay-2"></div>
 
-    <div class="navbar-container">
+    <!-- BUTON SCROLL TO TOP -->
+    <button id="backToTop" onclick="scrollToTop()" title="Înapoi Sus">↑</button>
+
+    <!-- NAVIGAȚIE -->
+    <div class="navbar-wrapper">
+        <div class="hamburger-icon">☰</div>
         <div class="navbar">
             <a href="#" onclick="scrollLa('sectiune-despre')">Despre mine</a>
             <div class="dropdown">
@@ -345,7 +352,6 @@
 
     <!-- PAGINA PRINCIPALĂ -->
     <div id="page-home" class="page-section">
-        
         <div class="container">
             <div id="sectiune-despre" class="hero-section">
                 <h1 style="font-size: 4em; margin-bottom: 10px;">Sergiu</h1>
@@ -415,7 +421,6 @@
 
             <div id="ecran-cititor" style="display: none;">
                 <div class="cititor">
-                    <!-- Container special pentru animația rapidă a poeziilor -->
                     <div id="continut-poezie-animat">
                         <h2 id="titlu-poezie" style="color: #bb86fc;"></h2>
                         <div id="text-poezie" class="poezie-text"></div>
@@ -473,7 +478,6 @@
         let poeziiCurente = [];
         let indexCurent = 0;
 
-        // Resetare forțată la secțiunea de start la refresh (F5)
         if (history.scrollRestoration) {
             history.scrollRestoration = 'manual';
         }
@@ -482,7 +486,20 @@
             showPage('home', true);
         };
 
-        // Funcția principală care conține Tranziția Slide (Alb-Mov)
+        // Logică pentru Back to Top Button
+        window.addEventListener('scroll', function() {
+            var backToTopBtn = document.getElementById('backToTop');
+            if (window.scrollY > 400) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function showPage(pageId, initialLoad = false) {
             if (initialLoad) {
                 document.querySelectorAll('.page-section').forEach(el => el.style.display = 'none');
@@ -494,7 +511,6 @@
             let overlay1 = document.getElementById('transition-overlay-1');
             let overlay2 = document.getElementById('transition-overlay-2');
             
-            // Repornește animația prin resetarea claselor
             overlay1.classList.remove('slide-active-1');
             overlay2.classList.remove('slide-active-2');
             void overlay1.offsetWidth; 
@@ -503,7 +519,6 @@
             overlay1.classList.add('slide-active-1');
             overlay2.classList.add('slide-active-2');
 
-            // La fix 600ms, ambele overlay-uri acoperă perfect ecranul. Aici schimbăm pagina.
             setTimeout(() => {
                 document.querySelectorAll('.page-section').forEach(el => {
                     el.style.display = 'none';
@@ -515,19 +530,16 @@
                 window.scrollTo(0,0);
             }, 600);
 
-            // Curățăm animația după ce slide-urile au ieșit complet din ecran
             setTimeout(() => {
                 overlay1.classList.remove('slide-active-1');
                 overlay2.classList.remove('slide-active-2');
             }, 1400); 
         }
 
-        // Adaptare pentru meniu, ca să folosească tranzitia dacă e necesar
         function scrollLa(idElement) {
             let homePage = document.getElementById('page-home');
             if (homePage.style.display === 'none') {
                 showPage('home');
-                // Așteptăm 700ms ca să se termine tranzitia înainte să dăm scroll automat
                 setTimeout(() => {
                     document.getElementById(idElement).scrollIntoView({ behavior: 'smooth' });
                 }, 700); 
@@ -539,7 +551,6 @@
         function openVolum(idVolum) {
             showPage('volum');
             
-            // Modificăm detaliile volumului tot ascuns, la 600ms, sub slide-ul mov
             setTimeout(() => {
                 document.getElementById('ecran-cuprins').style.display = 'block';
                 document.getElementById('ecran-cititor').style.display = 'none';
@@ -575,7 +586,6 @@
             }, 600);
         }
 
-        // Animația foarte scurtă și fină doar pentru interiorul poeziilor
         function afiseazaPoezie(index) {
             indexCurent = index;
             document.getElementById('ecran-cuprins').style.display = 'none';
@@ -584,7 +594,7 @@
             let containerAnimat = document.getElementById('continut-poezie-animat');
             
             containerAnimat.classList.remove('animate-poem');
-            void containerAnimat.offsetWidth; // Force re-render
+            void containerAnimat.offsetWidth; 
             
             document.getElementById('titlu-poezie').innerText = poeziiCurente[index].titlu;
             document.getElementById('text-poezie').innerText = poeziiCurente[index].versuri;
@@ -599,7 +609,6 @@
         function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
         function prevPoezie() { if (indexCurent > 0) afiseazaPoezie(indexCurent - 1); }
 
-        // Parallax Focus Fade
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
