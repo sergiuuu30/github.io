@@ -37,7 +37,7 @@
             align-items: center;
             padding: 15px 0;
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            backdrop-filter: blur(5px); /* Efect modern de blur */
+            backdrop-filter: blur(5px);
         }
 
         .navbar-container:hover .navbar, .navbar:hover { top: 0; }
@@ -90,7 +90,6 @@
         }
         .dropdown-content a:last-child { border-bottom: none; }
 
-        /* Containere */
         .container {
             max-width: 1100px;
             margin: auto;
@@ -109,36 +108,41 @@
             align-items: center;
         }
 
-        /* Secțiunile volumelor pe tot ecranul */
+        /* Secțiunile volumelor pe tot ecranul, cu flex pentru aliniere stânga/dreapta */
         .vol-section {
             min-height: 100vh;
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
+            justify-content: flex-start; /* Implicit textul va sta în stânga */
+            text-align: left;
             position: relative;
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Creează efectul fin de Parallax la scroll */
+            background-attachment: fixed;
         }
 
-        /* Overlay întunecat peste poza de fundal pentru lizibilitate */
+        /* Alinierea la dreapta pentru volumele pare (INFINIT) */
+        .vol-section:nth-child(even) {
+            justify-content: flex-end;
+            text-align: right;
+        }
+
         .vol-section::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(30, 27, 36, 0.75); /* Ajustează 0.75 pentru a face poza mai clară sau mai întunecată */
+            background: rgba(20, 18, 24, 0.65); /* Ușor transparent pentru lizibilitate */
             z-index: 1;
         }
         
         .vol-info { 
             position: relative;
-            z-index: 2; /* Pune textul deasupra fundalului */
-            max-width: 800px;
+            z-index: 2;
+            max-width: 700px;
             padding: 40px;
+            margin: 0 8%; /* Oferă un spațiu plăcut față de marginile ecranului */
             
-            /* Efect de animație la scroll */
             opacity: 0;
             transform: translateY(30px);
             transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -185,10 +189,10 @@
             transform: translateY(-2px);
         }
 
-        /* Poze de fundal specifice fiecărui volum */
-        #volum-18 { background-image: url('https://images.unsplash.com/photo-1499244571948-7cc805602815?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-floralia { background-image: url('https://images.unsplash.com/photo-1460999150112-26fb29bcce0b?auto=format&fit=crop&w=1920&q=80'); }
+        /* Noile imagini de fundal */
+        #volum-18 { background-image: url('https://images.unsplash.com/photo-1476820865390-c52aeebb9891?auto=format&fit=crop&w=1920&q=80'); }
+        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=1920&q=80'); }
+        #volum-floralia { background-image: url('https://images.unsplash.com/photo-1490750967868-8f1d4612ce1c?auto=format&fit=crop&w=1920&q=80'); }
 
         .inner-page-padding { padding-top: 100px; padding-bottom: 60px; }
         
@@ -260,6 +264,8 @@
         .navigatie-cititor { margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 20px; }
 
         @media (max-width: 768px) {
+            .vol-section { justify-content: center !important; text-align: center !important; }
+            .vol-info { margin: 0 5%; padding: 20px; }
             .volume-grid { flex-direction: column; }
             .vol-btn { padding: 40px 20px; font-size: 1.8em; }
             .btn-poezie { width: 100%; } 
@@ -297,7 +303,7 @@
             </div>
         </div>
 
-        <!-- Volum 18 (Full Width) -->
+        <!-- Volum 18 (Stânga) -->
         <div id="volum-18" class="vol-section">
             <div class="vol-info">
                 <h2 class="vol-titlu">18</h2>
@@ -306,7 +312,7 @@
             </div>
         </div>
 
-        <!-- Volum INFINIT (Full Width) -->
+        <!-- Volum INFINIT (Dreapta) -->
         <div id="volum-infinit" class="vol-section">
             <div class="vol-info">
                 <h2 class="vol-titlu">INFINIT</h2>
@@ -315,7 +321,7 @@
             </div>
         </div>
 
-        <!-- Volum FLORALIA (Full Width) -->
+        <!-- Volum FLORALIA (Stânga) -->
         <div id="volum-floralia" class="vol-section">
             <div class="vol-info">
                 <h2 class="vol-titlu">FLORALIA</h2>
