@@ -6,8 +6,8 @@
     <title>Poezii | Sergiu</title>
     <style>
         body { 
-            /* Font modern, curat și fără serife pentru textul alb */
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            /* Fontul readus la cel clasic, potrivit cu estetica mov */
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; 
             background-color: #1e1b24; 
             color: #e0e0e0; 
             line-height: 1.6; 
@@ -35,7 +35,6 @@
             justify-content: center;
             align-items: center;
             padding: 15px 0;
-            /* Linia a fost eliminată complet de aici */
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
@@ -109,10 +108,12 @@
             justify-content: space-between;
             margin-top: 40px;
         }
+        
+        /* Butoane principale (Acasă/Capitole) mărite */
         .vol-btn {
             flex: 1;
-            padding: 60px 20px;
-            font-size: 1.8em;
+            padding: 80px 20px; 
+            font-size: 2.2em; 
             font-weight: bold;
             background-color: #2a2438;
             color: #bb86fc;
@@ -151,7 +152,6 @@
             justify-content: center;
         }
         
-        /* Butoane poezii mărite considerabil */
         .btn-poezie {
             background-color: #2a2438;
             color: #e0e0e0;
@@ -159,7 +159,7 @@
             padding: 20px;
             width: 180px; 
             font-size: 1.1em; 
-            font-weight: 500;
+            font-weight: bold;
             cursor: pointer;
             border-radius: 8px;
             transition: 0.3s;
@@ -178,12 +178,19 @@
             border-radius: 0 8px 8px 0;
         }
         
-        .navigatie-cititor { margin-top: 30px; display: flex; justify-content: space-between; }
+        /* Navigație centrată pentru poezii */
+        .navigatie-cititor { 
+            margin-top: 40px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            gap: 20px;
+        }
 
         @media (max-width: 768px) {
             .volume-grid { flex-direction: column; }
-            .vol-btn { padding: 40px 20px; }
-            .btn-poezie { width: 100%; } /* Pe telefon butoanele ocupă toată lățimea */
+            .vol-btn { padding: 40px 20px; font-size: 1.8em; }
+            .btn-poezie { width: 100%; } 
         }
     </style>
 </head>
@@ -197,7 +204,8 @@
                 <button class="dropbtn">Volume</button>
                 <div class="dropdown-content">
                     <a href="#" onclick="openVolum('18')">18</a>
-                    <a href="#" onclick="openVolum('infinit')">INFINIT</a>
+                    <!-- INFINIT acum deschide pagina cu capitole -->
+                    <a href="#" onclick="showPage('infinit')">INFINIT</a>
                     <a href="#" onclick="openVolum('floralia')">FLORALIA</a>
                 </div>
             </div>
@@ -206,27 +214,42 @@
     </div>
 
     <div class="container">
+        <!-- Pagina Acasă -->
         <div id="page-home" class="page-section" style="display: block;">
             <h1>Colecția de Poezii</h1>
             <p>Explorări prin acrostihuri, bucle narative conceptuale și motive clasice.</p>
             <div class="volume-grid">
                 <button class="vol-btn" onclick="openVolum('18')">18</button>
-                <button class="vol-btn" onclick="openVolum('infinit')">INFINIT</button>
+                <button class="vol-btn" onclick="showPage('infinit')">INFINIT</button>
                 <button class="vol-btn" onclick="openVolum('floralia')">FLORALIA</button>
             </div>
         </div>
 
+        <!-- Pagina INFINIT (Capitole) -->
+        <div id="page-infinit" class="page-section">
+            <h1>INFINIT</h1>
+            <p>Selectează un capitol pentru a explora poeziile.</p>
+            <div class="volume-grid">
+                <button class="vol-btn" onclick="openVolum('infinit-capitolul-1')">Capitolul 1 - Realizare</button>
+                <button class="vol-btn" onclick="openVolum('infinit-capitolul-2')">Capitolul 2 - Acceptare</button>
+                <button class="vol-btn" onclick="openVolum('infinit-capitolul-3')">Capitolul 3 - Renaștere</button>
+            </div>
+        </div>
+
+        <!-- Pagina Despre mine -->
         <div id="page-despre" class="page-section">
             <h1>Despre mine</h1>
             <p>Aici poți adăuga o scurtă biografie și detalii despre parcursul tău artistic și ingineresc.</p>
         </div>
 
+        <!-- Pagina Contact -->
         <div id="page-contact" class="page-section">
             <h1>Contact</h1>
             <p>Email: adresa@email.com</p>
             <p>Instagram: @username</p>
         </div>
 
+        <!-- Vizualizare Listă Poezii (Cuprins / Cititor) -->
         <div id="page-volum" class="page-section">
             <h1 id="titlu-volum">NUME VOLUM</h1>
             
@@ -243,8 +266,8 @@
                     <div id="text-poezie" class="poezie-text"></div>
                     
                     <div class="navigatie-cititor">
-                        <button class="btn-actiune" id="btn-prev" onclick="prevPoezie()">◄ Înapoi</button>
-                        <button class="btn-actiune" onclick="inapoiLaCuprins()">Cuprins</button>
+                        <button class="btn-actiune" id="btn-prev" onclick="prevPoezie()">◄ Anterioara</button>
+                        <button class="btn-actiune" onclick="inapoiLaCuprins()">Înapoi la listă</button>
                         <button class="btn-actiune" id="btn-next" onclick="nextPoezie()">Următoarea ►</button>
                     </div>
                 </div>
@@ -252,26 +275,42 @@
         </div>
     </div>
 
+    <!-- Baza de date cu poezii -->
     <div id="baza-de-date" style="display: none;">
         
+        <!-- Volumul 18 -->
         <div id="data-18">
             <div class="poem-item">
                 <div class="titlu">1. Prima poezie</div>
                 <div class="versuri">Aici introduci textul...</div>
             </div>
+        </div>
+
+        <!-- Volumul INFINIT - Capitolul 1 -->
+        <div id="data-infinit-capitolul-1">
             <div class="poem-item">
-                <div class="titlu">2. A doua poezie</div>
-                <div class="versuri">Versurile aici...</div>
+                <div class="titlu">Poezie Cap 1</div>
+                <div class="versuri">Versuri din capitolul 1...</div>
+            </div>
+        </div>
+        
+        <!-- Volumul INFINIT - Capitolul 2 -->
+        <div id="data-infinit-capitolul-2">
+            <div class="poem-item">
+                <div class="titlu">Poezie Cap 2</div>
+                <div class="versuri">Versuri din capitolul 2...</div>
+            </div>
+        </div>
+        
+        <!-- Volumul INFINIT - Capitolul 3 -->
+        <div id="data-infinit-capitolul-3">
+            <div class="poem-item">
+                <div class="titlu">Poezie Cap 3</div>
+                <div class="versuri">Versuri din capitolul 3...</div>
             </div>
         </div>
 
-        <div id="data-infinit">
-            <div class="poem-item">
-                <div class="titlu">Prolog Infinit</div>
-                <div class="versuri">Versuri infinit...</div>
-            </div>
-        </div>
-
+        <!-- Volumul FLORALIA -->
         <div id="data-floralia">
             <div class="poem-item">
                 <div class="titlu">Flora</div>
@@ -299,7 +338,10 @@
             showPage('volum');
             document.getElementById('ecran-cuprins').style.display = 'block';
             document.getElementById('ecran-cititor').style.display = 'none';
-            document.getElementById('titlu-volum').innerText = idVolum.toUpperCase();
+            
+            // Formatăm titlul (înlocuim cratimele cu spații)
+            let titluFormatat = idVolum.replace(/-/g, ' ').toUpperCase();
+            document.getElementById('titlu-volum').innerText = titluFormatat;
 
             let containere = document.querySelectorAll('#data-' + idVolum + ' .poem-item');
             poeziiCurente = Array.from(containere).map(el => ({
