@@ -16,6 +16,25 @@
             scroll-behavior: smooth;
         }
         
+        /* Animații pentru pagini și poezii */
+        @keyframes fadeInPage {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInPoem {
+            0% { opacity: 0; transform: translateX(10px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .animate-page {
+            animation: fadeInPage 0.8s ease-out forwards;
+        }
+
+        .animate-poem {
+            animation: fadeInPoem 0.3s ease-out forwards;
+        }
+
         /* Bara de navigare */
         .navbar-container {
             position: fixed;
@@ -188,13 +207,11 @@
             transform: translateY(-2px);
         }
 
-        /* Setările pentru fundalurile volumelor */
-        #volum-18 { background-image: url('https://images.unsplash.com/photo-1476820865390-c52aeebb9891?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=1920&q=80'); }
-        
-        /* Aici codul preia automat imaginea flora.jpg pe care o vei încărca tu pe GitHub */
+        /* Poze de fundal actualizate */
+        #volum-18 { background-image: url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1920&q=80'); }
+        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80'); }
         #volum-floralia { 
-            background-image: url('flora.jpg'); 
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/John_William_Waterhouse_-_Flora.jpg/1024px-John_William_Waterhouse_-_Flora.jpg'); 
             background-position: top center;
         }
 
@@ -296,7 +313,7 @@
     </div>
 
     <!-- PAGINA PRINCIPALĂ -->
-    <div id="page-home" class="page-section" style="display: block;">
+    <div id="page-home" class="page-section">
         
         <div class="container">
             <div id="sectiune-despre" class="hero-section">
@@ -307,7 +324,7 @@
             </div>
         </div>
 
-        <!-- Volum 18 -->
+        <!-- Volum 18 (Stânga) -->
         <div id="volum-18" class="vol-section">
             <div class="vol-info">
                 <h2 class="vol-titlu">18</h2>
@@ -316,7 +333,7 @@
             </div>
         </div>
 
-        <!-- Volum INFINIT -->
+        <!-- Volum INFINIT (Dreapta) -->
         <div id="volum-infinit" class="vol-section">
             <div class="vol-info">
                 <h2 class="vol-titlu">INFINIT</h2>
@@ -325,7 +342,7 @@
             </div>
         </div>
 
-        <!-- Volum FLORALIA -->
+        <!-- Volum FLORALIA (Stânga) -->
         <div id="volum-floralia" class="vol-section">
             <div class="vol-info">
                 <h2 class="vol-titlu">FLORALIA</h2>
@@ -370,8 +387,11 @@
 
             <div id="ecran-cititor" style="display: none;">
                 <div class="cititor">
-                    <h2 id="titlu-poezie" style="color: #bb86fc;"></h2>
-                    <div id="text-poezie" class="poezie-text"></div>
+                    <!-- Container special pentru animația rapidă a poeziilor -->
+                    <div id="continut-poezie-animat">
+                        <h2 id="titlu-poezie" style="color: #bb86fc;"></h2>
+                        <div id="text-poezie" class="poezie-text"></div>
+                    </div>
                     
                     <div class="navigatie-cititor">
                         <button class="btn-actiune" id="btn-prev" onclick="prevPoezie()">◄ Anterioara</button>
@@ -431,15 +451,37 @@
         let poeziiCurente = [];
         let indexCurent = 0;
 
+        // Script pentru forțarea revenirii la secțiunea de start la refresh
+        if (history.scrollRestoration) {
+            history.scrollRestoration = 'manual';
+        }
+        window.onload = function() {
+            window.scrollTo(0, 0);
+            showPage('home');
+        };
+
+        // Functia generala de schimbare a paginii cu animatie lunga
         function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(el => el.style.display = 'none');
-            document.getElementById('page-' + pageId).style.display = 'block';
+            document.querySelectorAll('.page-section').forEach(el => {
+                el.style.display = 'none';
+                el.classList.remove('animate-page');
+            });
+            
+            let targetPage = document.getElementById('page-' + pageId);
+            targetPage.style.display = 'block';
+            
+            // Trigger reflow pentru repornirea animatiei
+            void targetPage.offsetWidth; 
+            targetPage.classList.add('animate-page');
+            
             window.scrollTo(0,0);
         }
 
         function scrollLa(idElement) {
             showPage('home');
-            document.getElementById(idElement).scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                document.getElementById(idElement).scrollIntoView({ behavior: 'smooth' });
+            }, 100);
         }
 
         function openVolum(idVolum) {
@@ -475,13 +517,26 @@
             window.scrollTo(0,0);
         }
 
+        // Funcția de afișare poezie cu animație scurtă și rapidă
         function afiseazaPoezie(index) {
             indexCurent = index;
             document.getElementById('ecran-cuprins').style.display = 'none';
             document.getElementById('ecran-cititor').style.display = 'block';
             
+            let containerAnimat = document.getElementById('continut-poezie-animat');
+            
+            // Elimină clasa pentru a putea reporni animația
+            containerAnimat.classList.remove('animate-poem');
+            
+            // Trigger reflow
+            void containerAnimat.offsetWidth;
+            
+            // Schimbă textul
             document.getElementById('titlu-poezie').innerText = poeziiCurente[index].titlu;
             document.getElementById('text-poezie').innerText = poeziiCurente[index].versuri;
+            
+            // Adaugă animația rapidă
+            containerAnimat.classList.add('animate-poem');
 
             document.getElementById('btn-prev').style.visibility = index > 0 ? 'visible' : 'hidden';
             document.getElementById('btn-next').style.visibility = index < poeziiCurente.length - 1 ? 'visible' : 'hidden';
@@ -491,6 +546,7 @@
         function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
         function prevPoezie() { if (indexCurent > 0) afiseazaPoezie(indexCurent - 1); }
 
+        // Efectul de parallax focus la scroll
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
