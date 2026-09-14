@@ -6,8 +6,9 @@
     <title>Poezii | Sergiu</title>
     <style>
         body { 
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; 
-            background-color: #1e1b24; /* Fundal închis cu tentă mov */
+            /* Font modern, curat și fără serife pentru textul alb */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #1e1b24; 
             color: #e0e0e0; 
             line-height: 1.6; 
             margin: 0; 
@@ -15,20 +16,18 @@
             text-align: center;
         }
         
-        /* Containerul care declanșează bara de navigare la hover */
         .navbar-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 25px; /* Zona de sensibilitate pentru mouse */
+            height: 25px; 
             z-index: 1000;
         }
 
-        /* Bara de navigare ascunsă inițial */
         .navbar {
             position: absolute;
-            top: -100px; /* Ascunsă în sus */
+            top: -100px; 
             left: 0;
             width: 100%;
             background-color: #141218;
@@ -36,11 +35,10 @@
             justify-content: center;
             align-items: center;
             padding: 15px 0;
-            border-bottom: 2px solid #bb86fc; /* Mov principal */
+            /* Linia a fost eliminată complet de aici */
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Afișarea barei la hover pe zona de sus sau pe bară însăși */
         .navbar-container:hover .navbar, .navbar:hover {
             top: 0;
         }
@@ -62,7 +60,6 @@
             border-radius: 5px;
         }
 
-        /* Dropdown cu tranziție lină */
         .dropdown { 
             position: relative; 
             display: inline-block; 
@@ -97,17 +94,15 @@
         }
         .dropdown-content a:last-child { border-bottom: none; }
 
-        /* Container principal */
         .container {
             max-width: 900px;
             margin: auto;
-            padding: 80px 20px 40px 20px; /* Spațiu sus pentru a nu acoperi textul */
+            padding: 80px 20px 40px 20px; 
         }
         .page-section { display: none; }
         
         h1 { color: #bb86fc; }
 
-        /* Butoane Volume (3 coloane) */
         .volume-grid {
             display: flex;
             gap: 20px;
@@ -132,8 +127,8 @@
             color: #141218;
         }
 
-        /* Sistem de citire */
-        .actiuni-volum { margin-bottom: 30px; }
+        .actiuni-volum { margin-bottom: 40px; }
+        
         .btn-actiune {
             background-color: #bb86fc;
             color: #141218;
@@ -145,24 +140,30 @@
             border-radius: 5px;
             margin: 5px;
             transition: 0.3s;
+            font-family: inherit;
         }
         .btn-actiune:hover { background-color: #d1b3ff; }
         
         .cuprins-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
         }
+        
+        /* Butoane poezii mărite considerabil */
         .btn-poezie {
             background-color: #2a2438;
             color: #e0e0e0;
             border: 1px solid #bb86fc;
-            padding: 15px;
-            width: 120px;
+            padding: 20px;
+            width: 180px; 
+            font-size: 1.1em; 
+            font-weight: 500;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: 0.3s;
+            font-family: inherit;
         }
         .btn-poezie:hover { background-color: #433959; }
         
@@ -170,11 +171,11 @@
         .poezie-text { 
             white-space: pre-wrap; 
             font-style: italic; 
-            font-size: 1.2em; 
-            padding: 20px; 
+            font-size: 1.25em; 
+            padding: 25px; 
             border-left: 3px solid #bb86fc; 
             background: #2a2438; 
-            border-radius: 0 5px 5px 0;
+            border-radius: 0 8px 8px 0;
         }
         
         .navigatie-cititor { margin-top: 30px; display: flex; justify-content: space-between; }
@@ -182,14 +183,13 @@
         @media (max-width: 768px) {
             .volume-grid { flex-direction: column; }
             .vol-btn { padding: 40px 20px; }
+            .btn-poezie { width: 100%; } /* Pe telefon butoanele ocupă toată lățimea */
         }
     </style>
 </head>
 <body>
 
-    <!-- Zona care detectează mouse-ul sus -->
     <div class="navbar-container">
-        <!-- Bara de navigare -->
         <div class="navbar">
             <a href="#" onclick="showPage('home')">Acasă</a>
             <a href="#" onclick="showPage('despre')">Despre mine</a>
@@ -206,7 +206,6 @@
     </div>
 
     <div class="container">
-        <!-- Pagina Acasă -->
         <div id="page-home" class="page-section" style="display: block;">
             <h1>Colecția de Poezii</h1>
             <p>Explorări prin acrostihuri, bucle narative conceptuale și motive clasice.</p>
@@ -217,20 +216,17 @@
             </div>
         </div>
 
-        <!-- Pagina Despre mine -->
         <div id="page-despre" class="page-section">
             <h1>Despre mine</h1>
             <p>Aici poți adăuga o scurtă biografie și detalii despre parcursul tău artistic și ingineresc.</p>
         </div>
 
-        <!-- Pagina Contact -->
         <div id="page-contact" class="page-section">
             <h1>Contact</h1>
             <p>Email: adresa@email.com</p>
             <p>Instagram: @username</p>
         </div>
 
-        <!-- Vizualizare Volum -->
         <div id="page-volum" class="page-section">
             <h1 id="titlu-volum">NUME VOLUM</h1>
             
@@ -256,7 +252,6 @@
         </div>
     </div>
 
-    <!-- Baza de date cu poezii -->
     <div id="baza-de-date" style="display: none;">
         
         <div id="data-18">
