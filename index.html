@@ -5,36 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poezii | Sergiu</title>
     <style>
-        body { font-family: 'Georgia', serif; background-color: #fcfbf9; color: #333; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; }
-        h1 { text-align: center; color: #2c3e50; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-        .volum { margin-bottom: 40px; padding: 20px; border-left: 3px solid #2c3e50; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .titlu-volum { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; color: #1a252f; }
-        .poezie { white-space: pre-wrap; font-style: italic; margin-top: 10px;}
+        /* Schimbare font și fundal */
+        body { 
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; 
+            background-color: #2b2b2b; 
+            color: #e0e0e0; 
+            line-height: 1.6; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: auto; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #f1c40f; 
+            border-bottom: 1px solid #444; 
+            padding-bottom: 10px; 
+        }
+        .descriere {
+            text-align: center;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        /* Stil pentru butoanele clickabile */
+        .buton-volum {
+            background-color: #3d3d3d;
+            color: #f1c40f;
+            border: 1px solid #f1c40f;
+            padding: 15px 20px;
+            width: 100%;
+            font-size: 1.2em;
+            font-family: inherit;
+            cursor: pointer;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            text-align: left;
+            font-weight: bold;
+        }
+        .buton-volum:hover {
+            background-color: #f1c40f;
+            color: #2b2b2b;
+        }
+        /* Conținutul ascuns inițial */
+        .continut-volum {
+            display: none; 
+            background-color: #333;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 3px solid #f1c40f;
+        }
+        .poezie { 
+            white-space: pre-wrap; 
+        }
     </style>
 </head>
 <body>
     <h1>Colecția de Poezii</h1>
-    <p>Explorări prin acrostihuri, bucle narative conceptuale și motive clasice (Flora, Chloris, Zephyrus).</p>
+    <p class="descriere">Explorări prin acrostihuri, bucle narative conceptuale și motive clasice (Flora, Chloris, Zephyrus).</p>
 
-    <div class="volum">
-        <div class="titlu-volum">FLORALIA</div>
+    <!-- Volumul 18 -->
+    <button class="buton-volum" onclick="toggleVolum('volum-18')">18</button>
+    <div id="volum-18" class="continut-volum">
+        <div class="poezie">
+(Inserează textele pentru volumul 18 aici...)
+        </div>
+    </div>
+
+    <!-- Volumul INFINIT -->
+    <button class="buton-volum" onclick="toggleVolum('volum-infinit')">INFINIT</button>
+    <div id="volum-infinit" class="continut-volum">
+        <div class="poezie">
+(Inserează textele pentru volumul INFINIT aici...)
+        </div>
+    </div>
+
+    <!-- Volumul FLORALIA -->
+    <button class="buton-volum" onclick="toggleVolum('volum-floralia')">FLORALIA</button>
+    <div id="volum-floralia" class="continut-volum">
         <div class="poezie">
 (Inserează aici textele din structura celor șase poeme...)
         </div>
     </div>
 
-    <div class="volum">
-        <div class="titlu-volum">INFINIT</div>
-        <div class="poezie">
-(Inserează textele aici...)
-        </div>
-    </div>
-
-    <div class="volum">
-        <div class="titlu-volum">18</div>
-        <div class="poezie">
-(Inserează textele aici...)
-        </div>
-    </div>
+    <!-- Script pentru a face butoanele funcționale -->
+    <script>
+        function toggleVolum(id) {
+            var element = document.getElementById(id);
+            if (element.style.display === "block") {
+                element.style.display = "none";
+            } else {
+                element.style.display = "block";
+            }
+        }
+    </script>
 </body>
 </html>
