@@ -7,7 +7,7 @@
     <style>
         body { 
             font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; 
-            background-color: #2b2b2b; 
+            background-color: #1e1b24; /* Fundal închis cu tentă mov */
             color: #e0e0e0; 
             line-height: 1.6; 
             margin: 0; 
@@ -15,52 +15,98 @@
             text-align: center;
         }
         
-        /* Meniu de navigare */
+        /* Containerul care declanșează bara de navigare la hover */
+        .navbar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 25px; /* Zona de sensibilitate pentru mouse */
+            z-index: 1000;
+        }
+
+        /* Bara de navigare ascunsă inițial */
         .navbar {
-            background-color: #1a1a1a;
+            position: absolute;
+            top: -100px; /* Ascunsă în sus */
+            left: 0;
+            width: 100%;
+            background-color: #141218;
             display: flex;
             justify-content: center;
-            padding: 10px 0;
-            border-bottom: 2px solid #f1c40f;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 2px solid #bb86fc; /* Mov principal */
+            transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+
+        /* Afișarea barei la hover pe zona de sus sau pe bară însăși */
+        .navbar-container:hover .navbar, .navbar:hover {
+            top: 0;
+        }
+
         .navbar a, .dropbtn {
-            color: #f1c40f;
+            color: #bb86fc;
             text-decoration: none;
-            padding: 14px 20px;
+            padding: 10px 20px;
             font-size: 1.2em;
             background: none;
             border: none;
             cursor: pointer;
             font-family: inherit;
+            transition: color 0.3s;
         }
         .navbar a:hover, .dropdown:hover .dropbtn {
-            background-color: #333;
+            color: #d1b3ff;
+            background-color: #2a2438;
+            border-radius: 5px;
         }
-        .dropdown { position: relative; display: inline-block; }
+
+        /* Dropdown cu tranziție lină */
+        .dropdown { 
+            position: relative; 
+            display: inline-block; 
+        }
         .dropdown-content {
-            display: none;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%) translateY(15px);
             position: absolute;
-            background-color: #1a1a1a;
+            left: 50%;
+            top: 100%;
+            background-color: #141218;
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.6);
             z-index: 1;
+            border: 1px solid #bb86fc;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        .dropdown:hover .dropdown-content { 
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
         }
         .dropdown-content a {
             padding: 12px 16px;
             display: block;
-            text-align: left;
+            text-align: center;
             font-size: 1.1em;
+            border-bottom: 1px solid #2a2438;
         }
-        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown-content a:last-child { border-bottom: none; }
 
         /* Container principal */
         .container {
             max-width: 900px;
             margin: auto;
-            padding: 40px 20px;
+            padding: 80px 20px 40px 20px; /* Spațiu sus pentru a nu acoperi textul */
         }
         .page-section { display: none; }
         
+        h1 { color: #bb86fc; }
+
         /* Butoane Volume (3 coloane) */
         .volume-grid {
             display: flex;
@@ -73,24 +119,24 @@
             padding: 60px 20px;
             font-size: 1.8em;
             font-weight: bold;
-            background-color: #3d3d3d;
-            color: #f1c40f;
-            border: 2px solid #f1c40f;
+            background-color: #2a2438;
+            color: #bb86fc;
+            border: 2px solid #bb86fc;
             border-radius: 8px;
             cursor: pointer;
             transition: 0.3s;
             font-family: inherit;
         }
         .vol-btn:hover {
-            background-color: #f1c40f;
-            color: #2b2b2b;
+            background-color: #bb86fc;
+            color: #141218;
         }
 
         /* Sistem de citire */
         .actiuni-volum { margin-bottom: 30px; }
         .btn-actiune {
-            background-color: #f1c40f;
-            color: #2b2b2b;
+            background-color: #bb86fc;
+            color: #141218;
             border: none;
             padding: 12px 25px;
             font-size: 1.1em;
@@ -98,7 +144,10 @@
             cursor: pointer;
             border-radius: 5px;
             margin: 5px;
+            transition: 0.3s;
         }
+        .btn-actiune:hover { background-color: #d1b3ff; }
+        
         .cuprins-grid {
             display: flex;
             flex-wrap: wrap;
@@ -106,22 +155,30 @@
             justify-content: center;
         }
         .btn-poezie {
-            background-color: #3d3d3d;
+            background-color: #2a2438;
             color: #e0e0e0;
-            border: 1px solid #f1c40f;
+            border: 1px solid #bb86fc;
             padding: 15px;
             width: 120px;
             cursor: pointer;
             border-radius: 5px;
+            transition: 0.3s;
         }
-        .btn-poezie:hover { background-color: #555; }
+        .btn-poezie:hover { background-color: #433959; }
         
         .cititor { text-align: left; max-width: 600px; margin: auto; }
-        .poezie-text { white-space: pre-wrap; font-style: italic; font-size: 1.2em; padding: 20px; border-left: 3px solid #f1c40f; background: #333; }
+        .poezie-text { 
+            white-space: pre-wrap; 
+            font-style: italic; 
+            font-size: 1.2em; 
+            padding: 20px; 
+            border-left: 3px solid #bb86fc; 
+            background: #2a2438; 
+            border-radius: 0 5px 5px 0;
+        }
         
         .navigatie-cititor { margin-top: 30px; display: flex; justify-content: space-between; }
 
-        /* Responsivitate pentru telefon (O singură coloană) */
         @media (max-width: 768px) {
             .volume-grid { flex-direction: column; }
             .vol-btn { padding: 40px 20px; }
@@ -130,25 +187,28 @@
 </head>
 <body>
 
-    <!-- Bara de navigare -->
-    <div class="navbar">
-        <a href="#" onclick="showPage('home')">Acasă</a>
-        <a href="#" onclick="showPage('despre')">Despre mine</a>
-        <div class="dropdown">
-            <button class="dropbtn">Volume ▼</button>
-            <div class="dropdown-content">
-                <a href="#" onclick="openVolum('18')">18</a>
-                <a href="#" onclick="openVolum('infinit')">INFINIT</a>
-                <a href="#" onclick="openVolum('floralia')">FLORALIA</a>
+    <!-- Zona care detectează mouse-ul sus -->
+    <div class="navbar-container">
+        <!-- Bara de navigare -->
+        <div class="navbar">
+            <a href="#" onclick="showPage('home')">Acasă</a>
+            <a href="#" onclick="showPage('despre')">Despre mine</a>
+            <div class="dropdown">
+                <button class="dropbtn">Volume</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="openVolum('18')">18</a>
+                    <a href="#" onclick="openVolum('infinit')">INFINIT</a>
+                    <a href="#" onclick="openVolum('floralia')">FLORALIA</a>
+                </div>
             </div>
+            <a href="#" onclick="showPage('contact')">Contact</a>
         </div>
-        <a href="#" onclick="showPage('contact')">Contact</a>
     </div>
 
     <div class="container">
         <!-- Pagina Acasă -->
         <div id="page-home" class="page-section" style="display: block;">
-            <h1 style="color: #f1c40f;">Colecția de Poezii</h1>
+            <h1>Colecția de Poezii</h1>
             <p>Explorări prin acrostihuri, bucle narative conceptuale și motive clasice.</p>
             <div class="volume-grid">
                 <button class="vol-btn" onclick="openVolum('18')">18</button>
@@ -159,22 +219,21 @@
 
         <!-- Pagina Despre mine -->
         <div id="page-despre" class="page-section">
-            <h1 style="color: #f1c40f;">Despre mine</h1>
+            <h1>Despre mine</h1>
             <p>Aici poți adăuga o scurtă biografie și detalii despre parcursul tău artistic și ingineresc.</p>
         </div>
 
         <!-- Pagina Contact -->
         <div id="page-contact" class="page-section">
-            <h1 style="color: #f1c40f;">Contact</h1>
+            <h1>Contact</h1>
             <p>Email: adresa@email.com</p>
             <p>Instagram: @username</p>
         </div>
 
         <!-- Vizualizare Volum -->
         <div id="page-volum" class="page-section">
-            <h1 id="titlu-volum" style="color: #f1c40f;">NUME VOLUM</h1>
+            <h1 id="titlu-volum">NUME VOLUM</h1>
             
-            <!-- Ecranul de Cuprins -->
             <div id="ecran-cuprins">
                 <div class="actiuni-volum">
                     <button class="btn-actiune" onclick="citesteIntegral()">Citește integral</button>
@@ -182,10 +241,9 @@
                 <div id="grid-cuprins" class="cuprins-grid"></div>
             </div>
 
-            <!-- Ecranul de Citire Poezie -->
             <div id="ecran-cititor" style="display: none;">
                 <div class="cititor">
-                    <h2 id="titlu-poezie" style="color: #f1c40f;"></h2>
+                    <h2 id="titlu-poezie" style="color: #bb86fc;"></h2>
                     <div id="text-poezie" class="poezie-text"></div>
                     
                     <div class="navigatie-cititor">
@@ -198,30 +256,20 @@
         </div>
     </div>
 
-    <!-- 
-    =========================================
-    Baza de date cu poezii (NU este vizibilă direct)
-    ========================================= 
-    -->
+    <!-- Baza de date cu poezii -->
     <div id="baza-de-date" style="display: none;">
         
-        <!-- VOLUMUL 18 -->
         <div id="data-18">
             <div class="poem-item">
-                <div class="titlu">1. Prima poezie din 18</div>
-                <div class="versuri">Aici introduci textul
-linia doi
-linia trei...</div>
+                <div class="titlu">1. Prima poezie</div>
+                <div class="versuri">Aici introduci textul...</div>
             </div>
             <div class="poem-item">
-                <div class="titlu">2. A doua poezie din 18</div>
-                <div class="versuri">Versurile pentru a doua poezie.
-Pentru a adăuga mai multe, 
-doar multiplici aceste blocuri "poem-item".</div>
+                <div class="titlu">2. A doua poezie</div>
+                <div class="versuri">Versurile aici...</div>
             </div>
         </div>
 
-        <!-- VOLUMUL INFINIT -->
         <div id="data-infinit">
             <div class="poem-item">
                 <div class="titlu">Prolog Infinit</div>
@@ -229,7 +277,6 @@ doar multiplici aceste blocuri "poem-item".</div>
             </div>
         </div>
 
-        <!-- VOLUMUL FLORALIA -->
         <div id="data-floralia">
             <div class="poem-item">
                 <div class="titlu">Flora</div>
@@ -243,7 +290,6 @@ doar multiplici aceste blocuri "poem-item".</div>
 
     </div>
 
-    <!-- Scriptul care face totul să funcționeze -->
     <script>
         let poeziiCurente = [];
         let indexCurent = 0;
@@ -251,6 +297,7 @@ doar multiplici aceste blocuri "poem-item".</div>
         function showPage(pageId) {
             document.querySelectorAll('.page-section').forEach(el => el.style.display = 'none');
             document.getElementById('page-' + pageId).style.display = 'block';
+            window.scrollTo(0,0);
         }
 
         function openVolum(idVolum) {
@@ -259,14 +306,12 @@ doar multiplici aceste blocuri "poem-item".</div>
             document.getElementById('ecran-cititor').style.display = 'none';
             document.getElementById('titlu-volum').innerText = idVolum.toUpperCase();
 
-            // Preluăm poeziile din baza de date ascunsă
             let containere = document.querySelectorAll('#data-' + idVolum + ' .poem-item');
             poeziiCurente = Array.from(containere).map(el => ({
                 titlu: el.querySelector('.titlu').innerText,
                 versuri: el.querySelector('.versuri').innerText
             }));
 
-            // Generăm butoanele pentru cuprins
             let grid = document.getElementById('grid-cuprins');
             grid.innerHTML = '';
             poeziiCurente.forEach((poezie, i) => {
@@ -278,13 +323,12 @@ doar multiplici aceste blocuri "poem-item".</div>
             });
         }
 
-        function citesteIntegral() {
-            if (poeziiCurente.length > 0) afiseazaPoezie(0);
-        }
+        function citesteIntegral() { if (poeziiCurente.length > 0) afiseazaPoezie(0); }
 
         function inapoiLaCuprins() {
             document.getElementById('ecran-cuprins').style.display = 'block';
             document.getElementById('ecran-cititor').style.display = 'none';
+            window.scrollTo(0,0);
         }
 
         function afiseazaPoezie(index) {
@@ -295,9 +339,9 @@ doar multiplici aceste blocuri "poem-item".</div>
             document.getElementById('titlu-poezie').innerText = poeziiCurente[index].titlu;
             document.getElementById('text-poezie').innerText = poeziiCurente[index].versuri;
 
-            // Ascundem/afișăm butoanele de navigare
             document.getElementById('btn-prev').style.visibility = index > 0 ? 'visible' : 'hidden';
             document.getElementById('btn-next').style.visibility = index < poeziiCurente.length - 1 ? 'visible' : 'hidden';
+            window.scrollTo(0,0);
         }
 
         function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
