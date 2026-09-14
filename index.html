@@ -108,13 +108,13 @@
             align-items: center;
         }
 
-        /* Secțiunile volumelor pe tot ecranul, cu flex pentru aliniere stânga/dreapta */
+        /* Secțiunile volumelor pe tot ecranul */
         .vol-section {
             min-height: 100vh;
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Implicit textul va sta în stânga */
+            justify-content: flex-start;
             text-align: left;
             position: relative;
             background-size: cover;
@@ -122,7 +122,6 @@
             background-attachment: fixed;
         }
 
-        /* Alinierea la dreapta pentru volumele pare (INFINIT) */
         .vol-section:nth-child(even) {
             justify-content: flex-end;
             text-align: right;
@@ -132,7 +131,7 @@
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(20, 18, 24, 0.65); /* Ușor transparent pentru lizibilitate */
+            background: rgba(20, 18, 24, 0.65);
             z-index: 1;
         }
         
@@ -141,7 +140,7 @@
             z-index: 2;
             max-width: 700px;
             padding: 40px;
-            margin: 0 8%; /* Oferă un spațiu plăcut față de marginile ecranului */
+            margin: 0 8%;
             
             opacity: 0;
             transform: translateY(30px);
@@ -189,10 +188,14 @@
             transform: translateY(-2px);
         }
 
-        /* Noile imagini de fundal */
-        #volum-18 { background-image: url('https://images.unsplash.com/photo-1476820865390-c52aeebb9891?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-floralia { background-image: url('https://images.unsplash.com/photo-1490750967868-8f1d4612ce1c?auto=format&fit=crop&w=1920&q=80'); }
+        /* Poze de fundal actualizate cu link-uri sigure */
+        #volum-18 { background-image: url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1920&q=80'); }
+        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80'); }
+        #volum-floralia { 
+            /* Tabloul Flora de John William Waterhouse */
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/23/John_William_Waterhouse_-_Flora.jpg'); 
+            background-position: top center;
+        }
 
         .inner-page-padding { padding-top: 100px; padding-bottom: 60px; }
         
