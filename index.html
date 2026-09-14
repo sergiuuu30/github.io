@@ -6,7 +6,6 @@
     <title>Poezii | Sergiu</title>
     <style>
         body { 
-            /* Fontul readus la cel clasic, potrivit cu estetica mov */
             font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; 
             background-color: #1e1b24; 
             color: #e0e0e0; 
@@ -14,6 +13,7 @@
             margin: 0; 
             padding: 0;
             text-align: center;
+            scroll-behavior: smooth; /* Efect de derulare lină */
         }
         
         .navbar-container {
@@ -59,10 +59,7 @@
             border-radius: 5px;
         }
 
-        .dropdown { 
-            position: relative; 
-            display: inline-block; 
-        }
+        .dropdown { position: relative; display: inline-block; }
         .dropdown-content {
             opacity: 0;
             visibility: hidden;
@@ -100,16 +97,75 @@
         }
         .page-section { display: none; }
         
-        h1 { color: #bb86fc; }
+        h1, h2 { color: #bb86fc; }
 
+        /* Stiluri pentru sectiunile principale (Acasă) */
+        .main-section {
+            padding: 60px 0;
+        }
+
+        /* Design alternant pentru volume pe pagina principală */
+        .vol-card {
+            display: flex;
+            align-items: center;
+            background-color: #2a2438;
+            border: 1px solid #bb86fc;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            padding: 40px;
+            gap: 40px;
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+        .vol-card:hover {
+            transform: translateY(-5px);
+        }
+        /* Alternează ordinea elementelor la fiecare al doilea volum */
+        .vol-card:nth-child(even) {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+        
+        .vol-info { flex: 1.5; }
+        .vol-titlu { font-size: 2.2em; margin-top: 0; margin-bottom: 15px; }
+        .vol-desc { font-size: 1.2em; margin-bottom: 25px; color: #e0e0e0; }
+        
+        .vol-vizual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4em;
+            color: #1e1b24;
+            text-shadow: 2px 2px 0px #bb86fc;
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        /* Butonul Citește aici */
+        .btn-citeste {
+            background-color: #bb86fc;
+            color: #141218;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+        .btn-citeste:hover { background-color: #d1b3ff; }
+
+        /* Designul pentru paginile individuale cu capitole (INFINIT) */
         .volume-grid {
             display: flex;
             gap: 20px;
             justify-content: space-between;
             margin-top: 40px;
         }
-        
-        /* Butoane principale (Acasă/Capitole) mărite */
         .vol-btn {
             flex: 1;
             padding: 80px 20px; 
@@ -123,13 +179,9 @@
             transition: 0.3s;
             font-family: inherit;
         }
-        .vol-btn:hover {
-            background-color: #bb86fc;
-            color: #141218;
-        }
+        .vol-btn:hover { background-color: #bb86fc; color: #141218; }
 
         .actiuni-volum { margin-bottom: 40px; }
-        
         .btn-actiune {
             background-color: #bb86fc;
             color: #141218;
@@ -145,12 +197,7 @@
         }
         .btn-actiune:hover { background-color: #d1b3ff; }
         
-        .cuprins-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
+        .cuprins-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; }
         
         .btn-poezie {
             background-color: #2a2438;
@@ -178,7 +225,6 @@
             border-radius: 0 8px 8px 0;
         }
         
-        /* Navigație centrată pentru poezii */
         .navigatie-cititor { 
             margin-top: 40px; 
             display: flex; 
@@ -188,6 +234,12 @@
         }
 
         @media (max-width: 768px) {
+            .vol-card, .vol-card:nth-child(even) {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            .vol-vizual { display: none; } /* Ascundem ornamentul grafic pe telefon pentru spatiu */
             .volume-grid { flex-direction: column; }
             .vol-btn { padding: 40px 20px; font-size: 1.8em; }
             .btn-poezie { width: 100%; } 
@@ -198,30 +250,72 @@
 
     <div class="navbar-container">
         <div class="navbar">
-            <a href="#" onclick="showPage('home')">Acasă</a>
-            <a href="#" onclick="showPage('despre')">Despre mine</a>
+            <!-- Navigare internă prin scroll pentru pagina principală -->
+            <a href="#" onclick="scrollLa('sectiune-despre')">Despre mine</a>
             <div class="dropdown">
-                <button class="dropbtn">Volume</button>
+                <button class="dropbtn" onclick="scrollLa('sectiune-volume')">Volume</button>
                 <div class="dropdown-content">
                     <a href="#" onclick="openVolum('18')">18</a>
-                    <!-- INFINIT acum deschide pagina cu capitole -->
                     <a href="#" onclick="showPage('infinit')">INFINIT</a>
                     <a href="#" onclick="openVolum('floralia')">FLORALIA</a>
                 </div>
             </div>
-            <a href="#" onclick="showPage('contact')">Contact</a>
+            <a href="#" onclick="scrollLa('sectiune-contact')">Contact</a>
         </div>
     </div>
 
     <div class="container">
-        <!-- Pagina Acasă -->
+        <!-- PAGINA PRINCIPALĂ (Acasă) -->
         <div id="page-home" class="page-section" style="display: block;">
-            <h1>Colecția de Poezii</h1>
-            <p>Explorări prin acrostihuri, bucle narative conceptuale și motive clasice.</p>
-            <div class="volume-grid">
-                <button class="vol-btn" onclick="openVolum('18')">18</button>
-                <button class="vol-btn" onclick="showPage('infinit')">INFINIT</button>
-                <button class="vol-btn" onclick="openVolum('floralia')">FLORALIA</button>
+            
+            <!-- Secțiunea Despre mine -->
+            <div id="sectiune-despre" class="main-section" style="min-height: 40vh; display: flex; flex-direction: column; justify-content: center;">
+                <h1 style="font-size: 3.5em; margin-bottom: 10px;">Sergiu</h1>
+                <p style="font-size: 1.4em; max-width: 700px; margin: 0 auto; color: #d1b3ff; font-style: italic;">
+                    Aici poți scrie câteva rânduri despre tine, despre pasiunea ta pentru poezie și despre modul în care ai transpus gândurile în aceste volume.
+                </p>
+            </div>
+
+            <!-- Secțiunea Volume (Design Alternant) -->
+            <div id="sectiune-volume" class="main-section">
+                <h2 style="font-size: 2.5em; border-bottom: 1px solid #2a2438; padding-bottom: 15px; margin-bottom: 50px;">Colecția de Poezii</h2>
+
+                <!-- Volum 18 -->
+                <div class="vol-card">
+                    <div class="vol-info">
+                        <h2 class="vol-titlu">18</h2>
+                        <p class="vol-desc">Un volum ce marchează începuturile, transformările și trăirile intense. O oglindire a maturizării prin versuri.</p>
+                        <button class="btn-citeste" onclick="openVolum('18')">Citește aici</button>
+                    </div>
+                    <div class="vol-vizual">XVIII</div>
+                </div>
+
+                <!-- Volum INFINIT -->
+                <div class="vol-card">
+                    <div class="vol-info">
+                        <h2 class="vol-titlu">INFINIT</h2>
+                        <p class="vol-desc">O călătorie conceptuală împărțită în trei etape fundamentale: Realizare, Acceptare și Renaștere.</p>
+                        <button class="btn-citeste" onclick="showPage('infinit')">Citește aici</button>
+                    </div>
+                    <div class="vol-vizual">∞</div>
+                </div>
+
+                <!-- Volum FLORALIA -->
+                <div class="vol-card">
+                    <div class="vol-info">
+                        <h2 class="vol-titlu">FLORALIA</h2>
+                        <p class="vol-desc">Explorări prin motive clasice, aducând în prim-plan figuri mitologice (Flora, Zephyrus) prin acrostihuri delicate.</p>
+                        <button class="btn-citeste" onclick="openVolum('floralia')">Citește aici</button>
+                    </div>
+                    <div class="vol-vizual">✿</div>
+                </div>
+            </div>
+
+            <!-- Secțiunea Contact -->
+            <div id="sectiune-contact" class="main-section" style="border-top: 1px solid #2a2438; margin-top: 40px;">
+                <h2 style="font-size: 2.5em;">Contact</h2>
+                <p style="font-size: 1.2em;">Email: adresa@email.com</p>
+                <p style="font-size: 1.2em;">Instagram: @username</p>
             </div>
         </div>
 
@@ -234,19 +328,7 @@
                 <button class="vol-btn" onclick="openVolum('infinit-capitolul-2')">Capitolul 2 - Acceptare</button>
                 <button class="vol-btn" onclick="openVolum('infinit-capitolul-3')">Capitolul 3 - Renaștere</button>
             </div>
-        </div>
-
-        <!-- Pagina Despre mine -->
-        <div id="page-despre" class="page-section">
-            <h1>Despre mine</h1>
-            <p>Aici poți adăuga o scurtă biografie și detalii despre parcursul tău artistic și ingineresc.</p>
-        </div>
-
-        <!-- Pagina Contact -->
-        <div id="page-contact" class="page-section">
-            <h1>Contact</h1>
-            <p>Email: adresa@email.com</p>
-            <p>Instagram: @username</p>
+            <button class="btn-actiune" style="margin-top: 40px;" onclick="showPage('home')">Înapoi Acasă</button>
         </div>
 
         <!-- Vizualizare Listă Poezii (Cuprins / Cititor) -->
@@ -258,6 +340,7 @@
                     <button class="btn-actiune" onclick="citesteIntegral()">Citește integral</button>
                 </div>
                 <div id="grid-cuprins" class="cuprins-grid"></div>
+                <button class="btn-actiune" style="margin-top: 40px;" onclick="showPage('home')">Înapoi Acasă</button>
             </div>
 
             <div id="ecran-cititor" style="display: none;">
@@ -334,12 +417,17 @@
             window.scrollTo(0,0);
         }
 
+        // Navigare cu scroll fin pe pagina principală
+        function scrollLa(idElement) {
+            showPage('home');
+            document.getElementById(idElement).scrollIntoView({ behavior: 'smooth' });
+        }
+
         function openVolum(idVolum) {
             showPage('volum');
             document.getElementById('ecran-cuprins').style.display = 'block';
             document.getElementById('ecran-cititor').style.display = 'none';
             
-            // Formatăm titlul (înlocuim cratimele cu spații)
             let titluFormatat = idVolum.replace(/-/g, ' ').toUpperCase();
             document.getElementById('titlu-volum').innerText = titluFormatat;
 
