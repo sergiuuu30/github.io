@@ -50,7 +50,7 @@
         .animate-poem { animation: fadeInPoem 0.3s ease-out forwards; }
 
         /* ---------------------------------------------------
-           NAVIGAȚIE INTELIGENTĂ (Hamburger + Bară)
+           NAVIGAȚIE INTELIGENTĂ (Fără contur, elegant)
         ---------------------------------------------------- */
         .navigation-system {
             position: fixed;
@@ -58,31 +58,31 @@
             left: 0;
             width: 100%;
             z-index: 9000;
-            pointer-events: none; /* Permite click-urile prin zonă pentru a nu bloca site-ul */
+            pointer-events: none;
         }
 
         .hamburger-trigger {
             position: absolute;
             top: 0;
-            right: 0; /* Plasat în dreapta sus */
+            right: 0;
             width: 100px;
-            height: 80px; /* Hitbox generos pentru hover */
-            pointer-events: auto; /* Activează hover-ul doar pe buton */
+            height: 80px;
+            pointer-events: auto;
             display: flex;
             justify-content: center;
             padding-top: 20px;
         }
 
         .hamburger-icon {
-            background-color: rgba(20, 18, 24, 0.85);
+            background-color: rgba(20, 18, 24, 0.65);
             color: #bb86fc;
             padding: 8px 18px;
             font-size: 1.8em;
             border-radius: 8px;
-            border: 1px solid #bb86fc;
-            backdrop-filter: blur(5px);
+            border: none; /* Eliminat conturul mov */
+            backdrop-filter: blur(8px);
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             height: fit-content;
         }
 
@@ -91,18 +91,18 @@
             top: -100px;
             left: 0;
             width: 100%;
-            background-color: rgba(20, 18, 24, 0.95);
+            background-color: rgba(20, 18, 24, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 15px 0;
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            backdrop-filter: blur(5px);
-            border-bottom: 1px solid #bb86fc;
-            pointer-events: auto; /* Activează butoanele din bară */
+            backdrop-filter: blur(10px);
+            border: none; /* Eliminat conturul mov */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            pointer-events: auto;
         }
 
-        /* Hover pe sistem declanșează animațiile */
         .navigation-system:hover .navbar { top: 0; }
         .navigation-system:hover .hamburger-icon { 
             opacity: 0; 
@@ -122,7 +122,7 @@
         }
         .navbar a:hover, .dropdown:hover .dropbtn {
             color: #d1b3ff;
-            background-color: rgba(42, 36, 56, 0.8);
+            background-color: rgba(42, 36, 56, 0.6);
             border-radius: 5px;
         }
 
@@ -134,14 +134,15 @@
             position: absolute;
             left: 50%;
             top: 100%;
-            background-color: #141218;
+            background-color: rgba(20, 18, 24, 0.95);
             min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.6);
+            box-shadow: 0px 8px 20px 0px rgba(0,0,0,0.6);
             z-index: 1;
-            border: 1px solid #bb86fc;
-            border-radius: 5px;
+            border: none;
+            border-radius: 8px;
             transition: all 0.3s ease;
             margin-top: 10px;
+            backdrop-filter: blur(10px);
         }
         .dropdown:hover .dropdown-content { 
             opacity: 1;
@@ -153,18 +154,18 @@
             display: block;
             text-align: center;
             font-size: 1.1em;
-            border-bottom: 1px solid #2a2438;
+            border-bottom: 1px solid rgba(187, 134, 252, 0.1);
         }
         .dropdown-content a:last-child { border-bottom: none; }
 
         /* ---------------------------------------------------
-           BUTON SCROLL TO TOP (Cu săgeată SVG elegantă)
+           BUTON SCROLL TO TOP
         ---------------------------------------------------- */
         #backToTop {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background-color: #bb86fc;
+            background-color: rgba(187, 134, 252, 0.9);
             color: #141218;
             border: none;
             border-radius: 50%;
@@ -179,12 +180,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
         #backToTop.show { opacity: 1; visibility: visible; }
         #backToTop:hover {
             background-color: #d1b3ff;
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(187, 134, 252, 0.5);
+            box-shadow: 0 6px 20px rgba(187, 134, 252, 0.7);
         }
 
         /* ---------------------------------------------------
@@ -277,7 +279,7 @@
     <div id="transition-overlay-1"></div>
     <div id="transition-overlay-2"></div>
 
-    <!-- BUTON SCROLL TO TOP (SVG Elegant) -->
+    <!-- BUTON SCROLL TO TOP -->
     <button id="backToTop" onclick="scrollToTop()" title="Înapoi Sus">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M18 15l-6-6-6 6"/>
