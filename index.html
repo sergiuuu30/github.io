@@ -16,6 +16,7 @@
             scroll-behavior: smooth;
         }
         
+        /* Bara de navigare */
         .navbar-container {
             position: fixed;
             top: 0;
@@ -30,12 +31,13 @@
             top: -100px; 
             left: 0;
             width: 100%;
-            background-color: #141218;
+            background-color: rgba(20, 18, 24, 0.95);
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 15px 0;
             transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            backdrop-filter: blur(5px); /* Efect modern de blur */
         }
 
         .navbar-container:hover .navbar, .navbar:hover { top: 0; }
@@ -53,7 +55,7 @@
         }
         .navbar a:hover, .dropdown:hover .dropbtn {
             color: #d1b3ff;
-            background-color: #2a2438;
+            background-color: rgba(42, 36, 56, 0.8);
             border-radius: 5px;
         }
 
@@ -88,6 +90,7 @@
         }
         .dropdown-content a:last-child { border-bottom: none; }
 
+        /* Containere */
         .container {
             max-width: 1100px;
             margin: auto;
@@ -106,63 +109,67 @@
             align-items: center;
         }
 
+        /* Secțiunile volumelor pe tot ecranul */
         .vol-section {
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 50px;
-            text-align: left;
-            opacity: 0.1;
-            transform: translateY(50px) scale(0.95);
-            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-
-        .vol-section.in-focus {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        .vol-section:nth-child(even) {
-            flex-direction: row-reverse;
-            text-align: right;
-        }
-        
-        .vol-info { flex: 1; }
-        .vol-titlu { font-size: 3.5em; margin-top: 0; margin-bottom: 15px; }
-        .vol-desc { font-size: 1.4em; margin-bottom: 35px; color: #e0e0e0; }
-        
-        /* Stil pentru imaginile volumelor */
-        .vol-vizual {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .vol-vizual img {
             width: 100%;
-            max-width: 400px;
-            height: auto;
-            aspect-ratio: 3/4;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            transition: transform 0.8s ease, box-shadow 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Creează efectul fin de Parallax la scroll */
         }
 
-        /* Efect la focus pe imagine */
-        .vol-section.in-focus .vol-vizual img {
-            transform: scale(1.05);
-            box-shadow: 0 15px 50px rgba(187, 134, 252, 0.3);
+        /* Overlay întunecat peste poza de fundal pentru lizibilitate */
+        .vol-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(30, 27, 36, 0.75); /* Ajustează 0.75 pentru a face poza mai clară sau mai întunecată */
+            z-index: 1;
+        }
+        
+        .vol-info { 
+            position: relative;
+            z-index: 2; /* Pune textul deasupra fundalului */
+            max-width: 800px;
+            padding: 40px;
+            
+            /* Efect de animație la scroll */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .vol-section.in-focus .vol-info {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .vol-titlu { 
+            font-size: 4.5em; 
+            margin-top: 0; 
+            margin-bottom: 10px; 
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+        
+        .vol-desc { 
+            font-size: 1.5em; 
+            margin-bottom: 40px; 
+            color: #f0f0f0; 
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
         }
 
         .btn-citeste {
             background-color: #bb86fc;
             color: #141218;
-            padding: 15px 35px;
+            padding: 15px 40px;
             font-size: 1.2em;
-            border-radius: 5px;
+            border-radius: 30px;
             text-decoration: none;
             display: inline-block;
             font-weight: bold;
@@ -170,8 +177,18 @@
             border: none;
             font-family: inherit;
             transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(187, 134, 252, 0.3);
         }
-        .btn-citeste:hover { background-color: #d1b3ff; box-shadow: 0 0 15px #bb86fc; }
+        .btn-citeste:hover { 
+            background-color: #d1b3ff; 
+            box-shadow: 0 6px 20px rgba(187, 134, 252, 0.6); 
+            transform: translateY(-2px);
+        }
+
+        /* Poze de fundal specifice fiecărui volum */
+        #volum-18 { background-image: url('https://images.unsplash.com/photo-1499244571948-7cc805602815?auto=format&fit=crop&w=1920&q=80'); }
+        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1920&q=80'); }
+        #volum-floralia { background-image: url('https://images.unsplash.com/photo-1460999150112-26fb29bcce0b?auto=format&fit=crop&w=1920&q=80'); }
 
         .inner-page-padding { padding-top: 100px; padding-bottom: 60px; }
         
@@ -243,14 +260,11 @@
         .navigatie-cititor { margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 20px; }
 
         @media (max-width: 768px) {
-            .vol-section, .vol-section:nth-child(even) {
-                flex-direction: column; text-align: center; justify-content: center; gap: 20px;
-            }
-            .vol-vizual { margin-top: 20px; }
             .volume-grid { flex-direction: column; }
             .vol-btn { padding: 40px 20px; font-size: 1.8em; }
             .btn-poezie { width: 100%; } 
-            .vol-titlu { font-size: 2.5em; }
+            .vol-titlu { font-size: 3em; }
+            .vol-desc { font-size: 1.2em; }
         }
     </style>
 </head>
@@ -271,61 +285,55 @@
         </div>
     </div>
 
-    <div class="container">
-        <!-- PAGINA PRINCIPALĂ -->
-        <div id="page-home" class="page-section" style="display: block;">
-            
+    <!-- PAGINA PRINCIPALĂ -->
+    <div id="page-home" class="page-section" style="display: block;">
+        
+        <div class="container">
             <div id="sectiune-despre" class="hero-section">
                 <h1 style="font-size: 4em; margin-bottom: 10px;">Sergiu</h1>
                 <p style="font-size: 1.5em; max-width: 700px; margin: 0 auto; color: #d1b3ff; font-style: italic;">
                     Aici poți scrie câteva rânduri despre tine, despre pasiunea ta pentru poezie și despre modul în care ai transpus gândurile în aceste volume.
                 </p>
             </div>
+        </div>
 
-            <!-- Volum 18 -->
-            <div id="volum-18" class="vol-section">
-                <div class="vol-info">
-                    <h2 class="vol-titlu">18</h2>
-                    <p class="vol-desc">Un volum ce marchează începuturile, transformările și trăirile intense. O oglindire a maturizării prin versuri.</p>
-                    <button class="btn-citeste" onclick="openVolum('18')">Citește volumul</button>
-                </div>
-                <div class="vol-vizual">
-                    <img src="https://images.unsplash.com/photo-1499244571948-7cc805602815?auto=format&fit=crop&w=600&q=80" alt="Copertă Volum 18">
-                </div>
+        <!-- Volum 18 (Full Width) -->
+        <div id="volum-18" class="vol-section">
+            <div class="vol-info">
+                <h2 class="vol-titlu">18</h2>
+                <p class="vol-desc">Un volum ce marchează începuturile, transformările și trăirile intense. O oglindire a maturizării prin versuri.</p>
+                <button class="btn-citeste" onclick="openVolum('18')">Citește volumul</button>
             </div>
+        </div>
 
-            <!-- Volum INFINIT -->
-            <div id="volum-infinit" class="vol-section">
-                <div class="vol-info">
-                    <h2 class="vol-titlu">INFINIT</h2>
-                    <p class="vol-desc">O călătorie conceptuală împărțită în trei etape fundamentale: Realizare, Acceptare și Renaștere.</p>
-                    <button class="btn-citeste" onclick="showPage('infinit')">Explorează capitolele</button>
-                </div>
-                <div class="vol-vizual">
-                    <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=600&q=80" alt="Copertă Volum INFINIT">
-                </div>
+        <!-- Volum INFINIT (Full Width) -->
+        <div id="volum-infinit" class="vol-section">
+            <div class="vol-info">
+                <h2 class="vol-titlu">INFINIT</h2>
+                <p class="vol-desc">O călătorie conceptuală împărțită în trei etape fundamentale: Realizare, Acceptare și Renaștere.</p>
+                <button class="btn-citeste" onclick="showPage('infinit')">Explorează capitolele</button>
             </div>
+        </div>
 
-            <!-- Volum FLORALIA -->
-            <div id="volum-floralia" class="vol-section">
-                <div class="vol-info">
-                    <h2 class="vol-titlu">FLORALIA</h2>
-                    <p class="vol-desc">Explorări prin motive clasice, aducând în prim-plan figuri mitologice (Flora, Zephyrus) prin acrostihuri delicate.</p>
-                    <button class="btn-citeste" onclick="openVolum('floralia')">Citește volumul</button>
-                </div>
-                <div class="vol-vizual">
-                    <img src="https://images.unsplash.com/photo-1460999150112-26fb29bcce0b?auto=format&fit=crop&w=600&q=80" alt="Copertă Volum FLORALIA">
-                </div>
+        <!-- Volum FLORALIA (Full Width) -->
+        <div id="volum-floralia" class="vol-section">
+            <div class="vol-info">
+                <h2 class="vol-titlu">FLORALIA</h2>
+                <p class="vol-desc">Explorări prin motive clasice, aducând în prim-plan figuri mitologice (Flora, Zephyrus) prin acrostihuri delicate.</p>
+                <button class="btn-citeste" onclick="openVolum('floralia')">Citește volumul</button>
             </div>
+        </div>
 
-            <!-- Secțiunea Contact extinsă pentru a oferi suficient spațiu de scroll -->
+        <div class="container">
             <div id="sectiune-contact" class="hero-section" style="min-height: 100vh;">
                 <h2 style="font-size: 3em;">Contact</h2>
                 <p style="font-size: 1.5em;">Email: adresa@email.com</p>
                 <p style="font-size: 1.5em;">Instagram: @username</p>
             </div>
         </div>
+    </div>
 
+    <div class="container">
         <!-- Pagina INFINIT -->
         <div id="page-infinit" class="page-section inner-page-padding">
             <h1>INFINIT</h1>
@@ -473,7 +481,6 @@
         function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
         function prevPoezie() { if (indexCurent > 0) afiseazaPoezie(indexCurent - 1); }
 
-        // Am ajustat pragul la 0.4 pentru a ne asigura că este mereu declanșat
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -484,7 +491,7 @@
                     }
                 });
             }, {
-                threshold: 0.4 
+                threshold: 0.3 
             });
 
             document.querySelectorAll('.vol-section').forEach(section => {
