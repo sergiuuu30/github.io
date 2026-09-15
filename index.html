@@ -132,7 +132,7 @@
         #volum-infinit { background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80'); }
         #volum-floralia { background-image: url('flora.jpg'); background-position: top center; }
 
-        /* ZONA DE CITIRE (Pagina 2 virtuală) */
+        /* ZONA DE CITIRE */
         #zone-citire { background-color: #1e1b24; padding-bottom: 60px; min-height: 100vh; }
         .inner-page-padding { padding-top: 100px; padding-bottom: 60px; }
         
@@ -217,7 +217,7 @@
         </div>
     </div>
 
-    <!-- MAIN PAGE (Acum se poate ascunde complet!) -->
+    <!-- MAIN PAGE -->
     <div id="main-page">
         <!-- SECTIUNE: DESPRE MINE -->
         <div id="sectiune-despre" class="hero-section container">
@@ -259,7 +259,7 @@
         </div>
     </div>
 
-    <!-- ZONE DINAMICE DE CITIRE (Se deschid ca o pagină complet nouă) -->
+    <!-- ZONE DINAMICE DE CITIRE -->
     <div id="zone-citire" style="display: none;">
         
         <div id="page-infinit" class="inner-page-padding container" style="display: none;">
@@ -364,14 +364,115 @@
             <div class="poem-item"><div class="titlu">10. Final Renaștere</div><div class="versuri">Sfârșitul Capitolului 3.</div></div>
         </div>
 
-        <!-- FLORALIA (6 poezii) -->
+        <!-- FLORALIA (6 poezii INTEGRATE) -->
         <div id="data-floralia">
-            <div class="poem-item"><div class="titlu">1. Flora</div><div class="versuri">Acrostihul pentru Flora...</div></div>
-            <div class="poem-item"><div class="titlu">2. Zephyrus</div><div class="versuri">Versuri pentru Zephyrus...</div></div>
-            <div class="poem-item"><div class="titlu">3. Poem 3</div><div class="versuri">Versuri...</div></div>
-            <div class="poem-item"><div class="titlu">4. Poem 4</div><div class="versuri">Versuri...</div></div>
-            <div class="poem-item"><div class="titlu">5. Poem 5</div><div class="versuri">Versuri...</div></div>
-            <div class="poem-item"><div class="titlu">6. Poem 6 (Final)</div><div class="versuri">Sfârșitul călătoriei florale.</div></div>
+            <div class="poem-item">
+                <div class="titlu">1. Calliope</div>
+                <div class="versuri">Din întâmplare ai apărut
+În viața mea ce-i o furtună..
+Și-mi dai mereu o stare bună
+E un sentiment plăcut
+
+Când știu că ești lângă mine.
+Și când senin tu îmi zâmbești
+Cum să nu simți că înflorești?
+Simt primăvara cum vine..
+
+Totul în jur a înverzit
+S-aude orga în fundal
+Și chiar de sună madrigal
+Doar ochii tăi m-au liniștit.</div>
+            </div>
+            
+            <div class="poem-item">
+                <div class="titlu">2. Rapsodie</div>
+                <div class="versuri">Ciocârlie, ciocârlie
+Ce veste-mi aduci tu mie?
+Dezbinare sau unire
+Iubire sau amăgire?
+
+Vântul bate, nu s-oprește
+Prin câmpuri mândre de lalele
+Că e senin sau că sunt stele
+Iubirea în el tot crește
+
+Și pare că va continua
+S-adie ca-ntotdeauna
+Până când vor îmbrăca
+Ea rochia și el cununa.</div>
+            </div>
+            
+            <div class="poem-item">
+                <div class="titlu">3. Inefabil</div>
+                <div class="versuri">Când văd în jur tot înflorit
+Și smaraldul din ochii tăi
+În piept puternice bătăi
+Mă simt cel mai fericit.
+
+Când miros al tău parfum
+Și când îți simt atingerea
+Mereu când ești în preajma mea
+Se-nseninează al meu drum.
+
+Când totu-n jur e palpabil
+Și buzele eu îți sărut
+Nu-mi trebuie nimic mai mult
+Tot ce simt e inefabil.</div>
+            </div>
+            
+            <div class="poem-item">
+                <div class="titlu">4. Nectar</div>
+                <div class="versuri">De când florile au renăscut
+Boarea în viață-mi s-a așternut 
+Și chiar de pare de necrezut
+Se-ntâmplă de când ai apărut
+
+Chiar de la prima intâlnire
+Simt o întreagă regăsire
+Ce pare că n-are oprire
+Tinde spre a noastră unire
+
+Cu nuanțe dulci, ca de nectar
+Iubirea mea fără de hotar
+Strânsă-n cupe de mărgăritar
+Ți-o voi oferi mereu în dar.</div>
+            </div>
+            
+            <div class="poem-item">
+                <div class="titlu">5. Atemporal</div>
+                <div class="versuri">În câmpul plin de violete
+Se-mbină dorul și speranța
+Iubirea și siguranța
+În îmbrățisări discrete
+
+Vântul bate ca niciodată
+Până și clepsidra s-a spart
+Nici fluturii nu ne mai despart
+Zarva din jur de tot uitată
+
+Când să te strâng în brațe aleg
+Parcă timpul stă mereu pe loc
+Și dacă-n viață-i despre noroc
+Mă bucur că suntem un întreg.</div>
+            </div>
+            
+            <div class="poem-item">
+                <div class="titlu">6. Flora</div>
+                <div class="versuri">Din mulțimea cea numeroasă
+În decor de ape cristaline
+Sortită să fii lângă mine
+Te-am ales să-mi fii mireasă
+
+Cu buchet din roșii lalele
+Și în suflet cu un mare foc
+Timpul din nou parcă stă în loc
+Să mergem să culegem stele!
+
+Bobocii de crin au înflorit
+Adânc, în sufletul meu
+Pășim pe același curcubeu
+De la apus, pân' la răsărit.</div>
+            </div>
         </div>
     </div>
 
@@ -399,25 +500,20 @@
 
         function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
         
-        // Logica centrală pentru navigarea din Navbar
         function scrollLa(idElement) {
-            // Dacă suntem în zona de citire, ascundem zona de citire și arătăm Main Page-ul
             if (document.getElementById('main-page').style.display === 'none') {
                 document.getElementById('zone-citire').style.display = 'none';
                 document.getElementById('main-page').style.display = 'block';
-                // Lăsăm 10ms ca browserul să recunoască întoarcerea paginii principale, apoi dăm scroll
                 setTimeout(() => {
                     document.getElementById(idElement).scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 10);
             } else {
-                // Dacă suntem deja pe pagina principală, doar facem scroll
                 document.getElementById(idElement).scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
         function openVolum(idVolum, startLectura = false) {
             volumCurentId = idVolum;
-            // Ascundem pagina principală și arătăm pagina nouă de citire
             document.getElementById('main-page').style.display = 'none';
             document.getElementById('zone-citire').style.display = 'block';
             
@@ -448,7 +544,7 @@
             } else {
                 document.getElementById('ecran-cuprins').style.display = 'block';
                 document.getElementById('ecran-cititor').style.display = 'none';
-                window.scrollTo(0, 0); // Resetăm scroll-ul la vârf pe pagina nouă
+                window.scrollTo(0, 0); 
             }
         }
 
@@ -457,12 +553,10 @@
             document.getElementById('zone-citire').style.display = 'block';
             document.getElementById('page-volum').style.display = 'none';
             document.getElementById('page-infinit').style.display = 'block';
-            window.scrollTo(0, 0); // Resetăm scroll-ul
+            window.scrollTo(0, 0);
         }
 
-        function inchideCititor() {
-            scrollLa('sectiune-despre');
-        }
+        function inchideCititor() { scrollLa('sectiune-despre'); }
 
         function citesteIntegral() { if (poeziiCurente.length > 0) afiseazaPoezie(0); }
 
@@ -500,7 +594,7 @@
                 seteazaButonContinuare(btnContinua);
             }
             
-            window.scrollTo(0, 0); // Ne asigurăm că ești mereu sus când citești poezia nouă
+            window.scrollTo(0, 0); 
         }
 
         function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
