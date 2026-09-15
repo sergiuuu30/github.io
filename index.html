@@ -29,11 +29,25 @@
             transition: width 0.1s ease-out;
         }
 
-        @keyframes fadeInPoem {
-            0% { opacity: 0; transform: translateX(10px); }
-            100% { opacity: 1; transform: translateX(0); }
+        /* Animație elegantă pentru citirea poeziilor și scroll */
+        @keyframes fadeUpElegance {
+            0% { opacity: 0; transform: translateY(30px); filter: blur(5px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
-        .animate-poem { animation: fadeInPoem 0.3s ease-out forwards; }
+        .animate-poem { 
+            animation: fadeUpElegance 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; 
+        }
+
+        /* Clasă generică pentru elementele care apar la scroll */
+        .fade-in-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .fade-in-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* NAVIGAȚIE INTELIGENTĂ */
         .navigation-system {
@@ -171,10 +185,22 @@
             box-shadow: 0 10px 20px rgba(187, 134, 252, 0.4); 
         }
         
-        .cititor { text-align: left; max-width: 600px; margin: auto; }
+        /* CITITORUL ACTUALIZAT - Fără borduri, perfect centrat */
+        .cititor { 
+            text-align: center; 
+            max-width: 800px; 
+            margin: auto; 
+        }
+        
         .poezie-text { 
-            white-space: pre-wrap; font-style: italic; font-size: 1.25em; padding: 25px; 
-            border-left: 3px solid #bb86fc; background: #2a2438; border-radius: 0 8px 8px 0; 
+            white-space: pre-wrap; 
+            font-style: italic; 
+            font-size: 1.5em; /* Font mărit */
+            line-height: 1.8; /* Spațiere plăcută între rânduri */
+            padding: 20px; 
+            background: transparent; /* Niciun fundal vizibil, plutește pe ecran */
+            border-left: none; /* Fără bara mov */
+            color: #f0f0f0;
         }
         
         .navigatie-cititor { margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
@@ -187,6 +213,7 @@
             .btn-poezie { flex: 0 0 100%; aspect-ratio: auto; min-height: 120px; } 
             .vol-titlu { font-size: 3em; }
             .vol-desc { font-size: 1.2em; }
+            .poezie-text { font-size: 1.3em; }
         }
     </style>
 </head>
@@ -220,7 +247,7 @@
     <!-- MAIN PAGE -->
     <div id="main-page">
         <!-- SECTIUNE: DESPRE MINE -->
-        <div id="sectiune-despre" class="hero-section container">
+        <div id="sectiune-despre" class="hero-section container fade-in-scroll">
             <h1 style="font-size: 4em; margin-bottom: 10px;">Sergiu</h1>
             <p style="font-size: 1.5em; max-width: 700px; margin: 0 auto; color: #d1b3ff; font-style: italic;">
                 Aici poți scrie câteva rânduri despre tine, despre pasiunea ta pentru poezie și despre modul în care ai transpus gândurile în aceste volume.
@@ -252,7 +279,7 @@
         </div>
 
         <!-- SECTIUNE: CONTACT -->
-        <div id="sectiune-contact" class="hero-section container">
+        <div id="sectiune-contact" class="hero-section container fade-in-scroll">
             <h2 style="font-size: 3em;">Contact</h2>
             <p style="font-size: 1.5em;">Email: adresa@email.com</p>
             <p style="font-size: 1.5em;">Instagram: @username</p>
@@ -263,20 +290,20 @@
     <div id="zone-citire" style="display: none;">
         
         <div id="page-infinit" class="inner-page-padding container" style="display: none;">
-            <h1>INFINIT</h1>
-            <p>Selectează un capitol pentru a explora poeziile.</p>
-            <div class="volume-grid">
+            <h1 class="fade-in-scroll">INFINIT</h1>
+            <p class="fade-in-scroll">Selectează un capitol pentru a explora poeziile.</p>
+            <div class="volume-grid fade-in-scroll">
                 <button class="vol-btn" onclick="openVolum('infinit-capitolul-1')">Capitolul 1 - Realizare</button>
                 <button class="vol-btn" onclick="openVolum('infinit-capitolul-2')">Capitolul 2 - Acceptare</button>
                 <button class="vol-btn" onclick="openVolum('infinit-capitolul-3')">Capitolul 3 - Renaștere</button>
             </div>
-            <button class="btn-actiune" style="margin-top: 40px;" onclick="inchideCititor()">Înapoi la Pagina Principală</button>
+            <button class="btn-actiune fade-in-scroll" style="margin-top: 40px;" onclick="inchideCititor()">Înapoi la Pagina Principală</button>
         </div>
 
         <div id="page-volum" class="inner-page-padding container" style="display: none;">
-            <h1 id="titlu-volum">NUME VOLUM</h1>
+            <h1 id="titlu-volum" class="fade-in-scroll">NUME VOLUM</h1>
             
-            <div id="ecran-cuprins">
+            <div id="ecran-cuprins" class="fade-in-scroll">
                 <div class="actiuni-volum">
                     <button class="btn-actiune" onclick="citesteIntegral()">Citește integral</button>
                 </div>
@@ -287,11 +314,11 @@
             <div id="ecran-cititor" style="display: none;">
                 <div class="cititor">
                     <div id="continut-poezie-animat">
-                        <h2 id="titlu-poezie" style="color: #bb86fc;"></h2>
+                        <h2 id="titlu-poezie" style="color: #bb86fc; margin-bottom: 30px; font-size: 2em;"></h2>
                         <div id="text-poezie" class="poezie-text"></div>
                     </div>
                     
-                    <div class="navigatie-cititor">
+                    <div class="navigatie-cititor fade-in-scroll">
                         <button class="btn-actiune" id="btn-prev" onclick="prevPoezie()">◄ Anterioara</button>
                         <button class="btn-actiune" onclick="inapoiLaCuprins()">Înapoi la listă</button>
                         <button class="btn-actiune" id="btn-next" onclick="nextPoezie()">Următoarea ►</button>
@@ -367,7 +394,7 @@
         <!-- FLORALIA (6 poezii INTEGRATE) -->
         <div id="data-floralia">
             <div class="poem-item">
-                <div class="titlu">1. Calliope</div>
+                <div class="titlu">Calliope</div>
                 <div class="versuri">Din întâmplare ai apărut
 În viața mea ce-i o furtună..
 Și-mi dai mereu o stare bună
@@ -385,7 +412,7 @@ Doar ochii tăi m-au liniștit.</div>
             </div>
             
             <div class="poem-item">
-                <div class="titlu">2. Rapsodie</div>
+                <div class="titlu">Rapsodie</div>
                 <div class="versuri">Ciocârlie, ciocârlie
 Ce veste-mi aduci tu mie?
 Dezbinare sau unire
@@ -403,7 +430,7 @@ Ea rochia și el cununa.</div>
             </div>
             
             <div class="poem-item">
-                <div class="titlu">3. Inefabil</div>
+                <div class="titlu">Inefabil</div>
                 <div class="versuri">Când văd în jur tot înflorit
 Și smaraldul din ochii tăi
 În piept puternice bătăi
@@ -421,7 +448,7 @@ Tot ce simt e inefabil.</div>
             </div>
             
             <div class="poem-item">
-                <div class="titlu">4. Nectar</div>
+                <div class="titlu">Nectar</div>
                 <div class="versuri">De când florile au renăscut
 Boarea în viață-mi s-a așternut 
 Și chiar de pare de necrezut
@@ -439,7 +466,7 @@ Strânsă-n cupe de mărgăritar
             </div>
             
             <div class="poem-item">
-                <div class="titlu">5. Atemporal</div>
+                <div class="titlu">Atemporal</div>
                 <div class="versuri">În câmpul plin de violete
 Se-mbină dorul și speranța
 Iubirea și siguranța
@@ -457,7 +484,7 @@ Mă bucur că suntem un întreg.</div>
             </div>
             
             <div class="poem-item">
-                <div class="titlu">6. Flora</div>
+                <div class="titlu">Flora</div>
                 <div class="versuri">Din mulțimea cea numeroasă
 În decor de ape cristaline
 Sortită să fii lângă mine
@@ -512,6 +539,24 @@ De la apus, pân' la răsărit.</div>
             }
         }
 
+        // Atașăm noul efect de apariție elementelor din DOM
+        function triggerScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        entry.target.classList.add('in-focus');
+                    } else {
+                        entry.target.classList.remove('in-focus');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.vol-section, .fade-in-scroll').forEach(section => { 
+                observer.observe(section); 
+            });
+        }
+
         function openVolum(idVolum, startLectura = false) {
             volumCurentId = idVolum;
             document.getElementById('main-page').style.display = 'none';
@@ -533,7 +578,7 @@ De la apus, pân' la răsărit.</div>
             grid.innerHTML = '';
             poeziiCurente.forEach((poezie, i) => {
                 let btn = document.createElement('button');
-                btn.className = 'btn-poezie';
+                btn.className = 'btn-poezie fade-in-scroll';
                 btn.innerText = poezie.titlu;
                 btn.onclick = () => afiseazaPoezie(i);
                 grid.appendChild(btn);
@@ -546,6 +591,9 @@ De la apus, pân' la răsărit.</div>
                 document.getElementById('ecran-cititor').style.display = 'none';
                 window.scrollTo(0, 0); 
             }
+            
+            // Re-aplicăm efectul de apariție pe butoanele abia generate
+            setTimeout(triggerScrollReveal, 100);
         }
 
         function openInfinitChapters() {
@@ -554,6 +602,7 @@ De la apus, pân' la răsărit.</div>
             document.getElementById('page-volum').style.display = 'none';
             document.getElementById('page-infinit').style.display = 'block';
             window.scrollTo(0, 0);
+            setTimeout(triggerScrollReveal, 100);
         }
 
         function inchideCititor() { scrollLa('sectiune-despre'); }
@@ -595,6 +644,7 @@ De la apus, pân' la răsărit.</div>
             }
             
             window.scrollTo(0, 0); 
+            setTimeout(triggerScrollReveal, 100);
         }
 
         function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
@@ -619,16 +669,8 @@ De la apus, pân' la răsărit.</div>
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.classList.add('in-focus'); } 
-                    else { entry.target.classList.remove('in-focus'); }
-                });
-            }, { threshold: 0.3 });
-
-            document.querySelectorAll('.vol-section').forEach(section => { observer.observe(section); });
-        });
+        // Activăm Intersection Observer-ul la prima încărcare
+        document.addEventListener('DOMContentLoaded', triggerScrollReveal);
     </script>
 </body>
 </html>
