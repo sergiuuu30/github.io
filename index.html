@@ -180,7 +180,7 @@
         }
 
         /* ---------------------------------------------------
-           STRUCTURA PAGINILOR (Fără display: none)
+           STRUCTURA PAGINILOR 
         ---------------------------------------------------- */
         .container { max-width: 1100px; margin: auto; padding: 0 20px; }
         h1, h2 { color: #bb86fc; }
@@ -282,16 +282,17 @@
             <div class="hamburger-icon">☰</div>
         </div>
         <div class="navbar">
-            <a href="#" onclick="scrollLa('sectiune-despre')">Despre mine</a>
+            <!-- REPARAT: Folosind javascript:void(0); în loc de # -->
+            <a href="javascript:void(0);" onclick="scrollLa('sectiune-despre')">Despre mine</a>
             <div class="dropdown">
                 <button class="dropbtn" onclick="scrollLa('volum-18')">Volume</button>
                 <div class="dropdown-content">
-                    <a href="#" onclick="openVolum('18')">18</a>
-                    <a href="#" onclick="openInfinitChapters()">INFINIT</a>
-                    <a href="#" onclick="openVolum('floralia')">FLORALIA</a>
+                    <a href="javascript:void(0);" onclick="openVolum('18')">18</a>
+                    <a href="javascript:void(0);" onclick="openInfinitChapters()">INFINIT</a>
+                    <a href="javascript:void(0);" onclick="openVolum('floralia')">FLORALIA</a>
                 </div>
             </div>
-            <a href="#" onclick="scrollLa('sectiune-contact')">Contact</a>
+            <a href="javascript:void(0);" onclick="scrollLa('sectiune-contact')">Contact</a>
         </div>
     </div>
 
@@ -332,10 +333,9 @@
         </div>
     </div>
 
-    <!-- ZONE DINAMICE DE CITIRE (Se activează la click și te duc direct la ele prin scroll) -->
+    <!-- ZONE DINAMICE DE CITIRE -->
     <div id="zone-citire" style="display: none;">
         
-        <!-- Capitole INFINIT -->
         <div id="page-infinit" class="inner-page-padding container" style="display: none;">
             <h1>INFINIT</h1>
             <p>Selectează un capitol pentru a explora poeziile.</p>
@@ -347,7 +347,6 @@
             <button class="btn-actiune" style="margin-top: 40px;" onclick="inchideCititor()">Închide și revino Sus</button>
         </div>
 
-        <!-- Vizualizare Cuprins/Poezii -->
         <div id="page-volum" class="inner-page-padding container" style="display: none;">
             <h1 id="titlu-volum">NUME VOLUM</h1>
             
@@ -383,7 +382,7 @@
         <p style="font-size: 1.5em;">Instagram: @username</p>
     </div>
 
-    <!-- BAZA DE DATE CU POEZII (Ascunsă) -->
+    <!-- BAZA DE DATE CU POEZII -->
     <div id="baza-de-date" style="display: none;">
         <div id="data-18">
             <div class="poem-item">
@@ -425,11 +424,9 @@
         let poeziiCurente = [];
         let indexCurent = 0;
 
-        // Resetare la vârf la refresh
         if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
         window.onload = function() { window.scrollTo(0, 0); };
 
-        // Logica pentru Bara de Progres & Back to Top
         window.addEventListener('scroll', function() {
             let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
             let scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -448,12 +445,10 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Navigare nativă fină către orice secțiune
         function scrollLa(idElement) {
-            document.getElementById(idElement).scrollIntoView({ behavior: 'smooth' });
+            document.getElementById(idElement).scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Deschiderea unui Volum
         function openVolum(idVolum) {
             document.getElementById('zone-citire').style.display = 'block';
             document.getElementById('page-infinit').style.display = 'none';
@@ -481,13 +476,11 @@
             document.getElementById('ecran-cuprins').style.display = 'block';
             document.getElementById('ecran-cititor').style.display = 'none';
 
-            // Dăm timp browserului să randeze elementul nou apărut, apoi dăm scroll lin către el
             setTimeout(() => {
                 document.getElementById('zone-citire').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 50);
         }
 
-        // Deschiderea specială a meniului INFINIT
         function openInfinitChapters() {
             document.getElementById('zone-citire').style.display = 'block';
             document.getElementById('page-volum').style.display = 'none';
@@ -498,10 +491,8 @@
             }, 50);
         }
 
-        // Ascunderea zonei de citire
         function inchideCititor() {
             document.getElementById('sectiune-despre').scrollIntoView({ behavior: 'smooth' });
-            // Se ascunde zona abia după ce a terminat de derulat
             setTimeout(() => {
                 document.getElementById('zone-citire').style.display = 'none';
             }, 800);
@@ -532,14 +523,12 @@
             document.getElementById('btn-prev').style.visibility = index > 0 ? 'visible' : 'hidden';
             document.getElementById('btn-next').style.visibility = index < poeziiCurente.length - 1 ? 'visible' : 'hidden';
             
-            // Când citești/treci la poezia următoare, menține focusul sus la nivelul zonei de citire
             document.getElementById('zone-citire').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
         function prevPoezie() { if (indexCurent > 0) afiseazaPoezie(indexCurent - 1); }
 
-        // Efectul de Parallax Focus pe volume
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
