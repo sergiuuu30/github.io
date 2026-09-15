@@ -3,674 +3,995 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poezii | Sergiu</title>
+    <title>Sergiu Drăghici - Portofoliu Poetic</title>
     <style>
-        body { 
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif; 
-            background-color: #1e1b24; 
-            color: #e0e0e0; 
-            line-height: 1.6; 
-            margin: 0; 
-            padding: 0;
+        :root {
+            --bg-color: #fafafa;
+            --text-color: #1a1a1a;
+            --btn-bg: #ededed;
+            --btn-hover: #e0e0e0;
+        }
+        
+        body {
+            font-family: "Georgia", serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 50px 20px;
             text-align: center;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
-        }
-        
-        #progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background-color: #bb86fc;
-            width: 0%;
-            z-index: 10000;
-            box-shadow: 0 0 12px #bb86fc;
-            transition: width 0.1s ease-out;
         }
 
-        /* Animație elegantă pentru citirea poeziilor și scroll */
-        @keyframes fadeUpElegance {
-            0% { opacity: 0; transform: translateY(30px); filter: blur(5px); }
-            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-        .animate-poem { 
-            animation: fadeUpElegance 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; 
-        }
-
-        /* Clasă generică pentru elementele care apar la scroll */
-        .fade-in-scroll {
+        /* --- SPA Transitions: Fade-up & Blur --- */
+        .view {
+            display: none;
             opacity: 0;
+            filter: blur(10px);
             transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: opacity 0.7s ease, filter 0.7s ease, transform 0.7s ease;
         }
-        .fade-in-scroll.is-visible {
+
+        .view.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             opacity: 1;
+            filter: blur(0);
             transform: translateY(0);
-        }
-
-        /* NAVIGAȚIE INTELIGENTĂ */
-        .navigation-system {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            z-index: 9000;
-            pointer-events: none;
         }
 
-        .hover-trigger-zone {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 70px; 
-            pointer-events: auto; display: flex; justify-content: flex-end;
-            padding-top: 20px; padding-right: 30px; box-sizing: border-box;
+        /* --- Aesthetics --- */
+        h1 {
+            font-weight: normal;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
         }
 
-        .hamburger-icon {
-            background-color: rgba(20, 18, 24, 0.65); color: #bb86fc; padding: 8px 18px;
-            font-size: 1.8em; border-radius: 8px; border: none; backdrop-filter: blur(8px);
-            transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3); height: fit-content;
+        .btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 500px;
         }
 
-        .navbar {
-            position: absolute; top: -100px; left: 0; width: 100%;
-            background-color: rgba(20, 18, 24, 0.85); display: flex; justify-content: center;
-            align-items: center; padding: 15px 0; transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            backdrop-filter: blur(10px); border: none; box-shadow: 0 5px 20px rgba(0,0,0,0.4); pointer-events: auto;
+        /* Butoane simetrice, mari, colturi rotunjite */
+        .sq-btn {
+            aspect-ratio: 1 / 1; 
+            background-color: var(--btn-bg);
+            border: none;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            color: inherit;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 2px;
         }
 
-        .navigation-system:hover .navbar { top: 0; }
-        .navigation-system:hover .hamburger-icon { opacity: 0; transform: translateY(-20px); }
-
-        .navbar a, .dropbtn {
-            color: #bb86fc; text-decoration: none; padding: 10px 20px; font-size: 1.2em;
-            background: none; border: none; cursor: pointer; font-family: inherit; transition: color 0.3s;
-        }
-        .navbar a:hover, .dropdown:hover .dropbtn {
-            color: #d1b3ff; background-color: rgba(42, 36, 56, 0.6); border-radius: 5px;
+        .sq-btn:hover {
+            background-color: var(--btn-hover);
+            transform: scale(1.03);
         }
 
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            opacity: 0; visibility: hidden; transform: translateX(-50%) translateY(15px);
-            position: absolute; left: 50%; top: 100%; background-color: rgba(20, 18, 24, 0.95);
-            min-width: 160px; box-shadow: 0px 8px 20px 0px rgba(0,0,0,0.6); z-index: 1; border: none;
-            border-radius: 8px; transition: all 0.3s ease; margin-top: 10px; backdrop-filter: blur(10px);
+        /* Formatare curată a textului, fără frames/sidebars */
+        .poem-container {
+            max-width: 600px;
+            margin: 30px auto;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            white-space: pre-wrap;
+            text-align: center;
         }
-        .dropdown:hover .dropdown-content { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .dropdown-content a {
-            padding: 12px 16px; display: block; text-align: center; font-size: 1.1em;
-            border-bottom: 1px solid rgba(187, 134, 252, 0.1); cursor: pointer;
-        }
-        .dropdown-content a:last-child { border-bottom: none; }
 
-        /* BUTON SCROLL TO TOP */
-        #backToTop {
-            position: fixed; bottom: 30px; right: 30px; background-color: rgba(187, 134, 252, 0.9);
-            color: #141218; border: none; border-radius: 50%; width: 55px; height: 55px; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transition: all 0.3s ease;
-            z-index: 8000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        .poem-container h3 {
+            margin-top: 50px;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
         }
-        #backToTop.show { opacity: 1; visibility: visible; }
-        #backToTop:hover { background-color: #d1b3ff; transform: translateY(-5px); box-shadow: 0 6px 20px rgba(187, 134, 252, 0.7); }
 
-        .container { max-width: 1100px; margin: auto; padding: 0 20px; }
-        h1, h2 { color: #bb86fc; }
-
-        .hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .vol-section {
-            min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: flex-start;
-            text-align: left; position: relative; background-size: cover; background-position: center; background-attachment: fixed;
-        }
-        .vol-section:nth-child(even) { justify-content: flex-end; text-align: right; }
-        .vol-section::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(20, 18, 24, 0.65); z-index: 1;
-        }
-        
-        .vol-info { 
-            position: relative; z-index: 2; max-width: 700px; padding: 40px; margin: 0 8%;
-            opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .vol-section.in-focus .vol-info { opacity: 1; transform: translateY(0); }
-        .vol-titlu { font-size: 4.5em; margin-top: 0; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); }
-        .vol-desc { font-size: 1.5em; margin-bottom: 40px; color: #f0f0f0; text-shadow: 1px 1px 5px rgba(0,0,0,0.8); }
-
-        .btn-citeste {
-            background-color: #bb86fc; color: #141218; padding: 15px 40px; font-size: 1.2em; border-radius: 30px;
-            text-decoration: none; display: inline-block; font-weight: bold; cursor: pointer; border: none;
-            font-family: inherit; transition: 0.3s; box-shadow: 0 4px 15px rgba(187, 134, 252, 0.3);
-        }
-        .btn-citeste:hover { background-color: #d1b3ff; box-shadow: 0 6px 20px rgba(187, 134, 252, 0.6); transform: translateY(-2px); }
-
-        #volum-18 { background-image: url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-infinit { background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-floralia { background-image: url('flora.jpg'); background-position: top center; }
-
-        /* ZONA DE CITIRE */
-        #zone-citire { background-color: #1e1b24; padding-bottom: 60px; min-height: 100vh; }
-        .inner-page-padding { padding-top: 100px; padding-bottom: 60px; }
-        
-        .volume-grid { display: flex; gap: 20px; justify-content: space-between; margin-top: 40px; }
-        .vol-btn {
-            flex: 1; padding: 80px 20px; font-size: 2.2em; font-weight: bold; background-color: #2a2438;
-            color: #bb86fc; border: 2px solid #bb86fc; border-radius: 8px; cursor: pointer; transition: 0.3s; font-family: inherit;
-        }
-        .vol-btn:hover { background-color: #bb86fc; color: #141218; }
-
-        .actiuni-volum { margin-bottom: 40px; }
-        .btn-actiune {
-            background-color: #bb86fc; color: #141218; border: none; padding: 12px 25px; font-size: 1.1em;
-            font-weight: bold; cursor: pointer; border-radius: 5px; margin: 5px; transition: 0.3s; font-family: inherit;
-        }
-        .btn-actiune:hover { background-color: #d1b3ff; }
-        .btn-special {
-            background-color: #ffb74d; color: #141218; box-shadow: 0 0 15px rgba(255, 183, 77, 0.4);
-        }
-        .btn-special:hover { background-color: #ffcc80; box-shadow: 0 0 20px rgba(255, 183, 77, 0.6); }
-        
-        /* Grila inteligentă pentru BUTOANELE PĂTRATE de poezii */
-        .cuprins-grid { 
-            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; 
-            max-width: 900px; margin: 0 auto;
-        }
-        
-        .btn-poezie {
-            background-color: #2a2438; color: #e0e0e0; border: 1px solid #bb86fc; padding: 20px; 
-            flex: 0 0 calc(33.333% - 14px); aspect-ratio: 1 / 1; display: flex; justify-content: center;
-            align-items: center; text-align: center; box-sizing: border-box; font-size: 1.4em;
-            font-weight: bold; cursor: pointer; border-radius: 15px; transition: all 0.3s ease; font-family: inherit;
-        }
-        .btn-poezie:hover { 
-            background-color: #bb86fc; color: #141218; transform: scale(1.05); 
-            box-shadow: 0 10px 20px rgba(187, 134, 252, 0.4); 
-        }
-        
-        /* CITITORUL ACTUALIZAT - Fără borduri, perfect centrat */
-        .cititor { 
-            text-align: center; 
-            max-width: 800px; 
-            margin: auto; 
-        }
-        
-        .poezie-text { 
-            white-space: pre-wrap; 
-            font-style: italic; 
-            font-size: 1.5em; /* Font mărit */
-            line-height: 1.8; /* Spațiere plăcută între rânduri */
-            padding: 20px; 
-            background: transparent; /* Niciun fundal vizibil, plutește pe ecran */
-            border-left: none; /* Fără bara mov */
-            color: #f0f0f0;
-        }
-        
-        .navigatie-cititor { margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
-
-        @media (max-width: 768px) {
-            .vol-section { justify-content: center !important; text-align: center !important; }
-            .vol-info { margin: 0 5%; padding: 20px; }
-            .volume-grid { flex-direction: column; }
-            .vol-btn { padding: 40px 20px; font-size: 1.8em; }
-            .btn-poezie { flex: 0 0 100%; aspect-ratio: auto; min-height: 120px; } 
-            .vol-titlu { font-size: 3em; }
-            .vol-desc { font-size: 1.2em; }
-            .poezie-text { font-size: 1.3em; }
+        .back-btn {
+            margin-top: 50px;
+            padding: 10px;
+            border: none;
+            background: none;
+            text-transform: lowercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--text-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
         }
     </style>
 </head>
 <body>
 
-    <div id="progress-bar"></div>
-
-    <button id="backToTop" onclick="scrollToTop()" title="Înapoi Sus">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 15l-6-6-6 6"/>
-        </svg>
-    </button>
-
-    <!-- NAVIGAȚIE -->
-    <div class="navigation-system">
-        <div class="hover-trigger-zone"><div class="hamburger-icon">☰</div></div>
-        <div class="navbar">
-            <a onclick="scrollLa('sectiune-despre')">Despre mine</a>
-            <div class="dropdown">
-                <button class="dropbtn" onclick="scrollLa('volum-18')">Volume</button>
-                <div class="dropdown-content">
-                    <a onclick="scrollLa('volum-18')">18</a>
-                    <a onclick="scrollLa('volum-infinit')">INFINIT</a>
-                    <a onclick="scrollLa('volum-floralia')">FLORALIA</a>
-                </div>
-            </div>
-            <a onclick="scrollLa('sectiune-contact')">Contact</a>
+    <!-- MENIU PRINCIPAL -->
+    <div id="home" class="view active">
+        <h1>SERGIU DRĂGHICI</h1>
+        <div class="btn-grid">
+            <button class="sq-btn" onclick="nav('vol-18')">18</button>
+            <button class="sq-btn" onclick="nav('vol-infinit')">INFINIT</button>
+            <button class="sq-btn" onclick="nav('vol-floralia')">FLORALIA</button>
         </div>
     </div>
 
-    <!-- MAIN PAGE -->
-    <div id="main-page">
-        <!-- SECTIUNE: DESPRE MINE -->
-        <div id="sectiune-despre" class="hero-section container fade-in-scroll">
-            <h1 style="font-size: 4em; margin-bottom: 10px;">Sergiu</h1>
-            <p style="font-size: 1.5em; max-width: 700px; margin: 0 auto; color: #d1b3ff; font-style: italic;">
-                Aici poți scrie câteva rânduri despre tine, despre pasiunea ta pentru poezie și despre modul în care ai transpus gândurile în aceste volume.
-            </p>
-        </div>
+    <!-- VOLUMUL 18 -->
+    <div id="vol-18" class="view">
+        <div class="poem-container">
+<h3>1. Déjà vu</h3>
+O nouă viaț-a început 
+Soarele nu mai e la fel
+Natura toat-a renăscut
+Mă simt ca într-un carusel.. 
 
-        <div id="volum-18" class="vol-section">
-            <div class="vol-info">
-                <h2 class="vol-titlu">18</h2>
-                <p class="vol-desc">Un volum ce marchează începuturile, transformările și trăirile intense. O oglindire a maturizării prin versuri.</p>
-                <button class="btn-citeste" onclick="openVolum('18')">Citește volumul</button>
-            </div>
-        </div>
+Atunci când tu frumos zâmbești 
+Și-mi lași în inimă prăpăd
+Nici nu poți să te gândești 
+Cât aș da zilnic să îl văd. 
 
-        <div id="volum-infinit" class="vol-section">
-            <div class="vol-info">
-                <h2 class="vol-titlu">INFINIT</h2>
-                <p class="vol-desc">O călătorie conceptuală împărțită în trei etape fundamentale: Realizare, Acceptare și Renaștere.</p>
-                <button class="btn-citeste" onclick="openInfinitChapters()">Explorează capitolele</button>
-            </div>
-        </div>
+Dar este greu. Și viața-i grea
+Și dacă aș putea vreodată 
+Ți-aș da din nemurirea mea
+Să nu te pierd niciodată. 
 
-        <div id="volum-floralia" class="vol-section">
-            <div class="vol-info">
-                <h2 class="vol-titlu">FLORALIA</h2>
-                <p class="vol-desc">Explorări prin motive clasice, aducând în prim-plan figuri mitologice (Flora, Zephyrus) prin acrostihuri delicate.</p>
-                <button class="btn-citeste" onclick="openVolum('floralia')">Citește volumul</button>
-            </div>
-        </div>
+Să fim tot timpul amândoi 
+Și tu să fii cea mai frumoasă 
+Să trecem prin vânturi și ploi
+Și-apoi tu să îmi fii mireasă. 
 
-        <!-- SECTIUNE: CONTACT -->
-        <div id="sectiune-contact" class="hero-section container fade-in-scroll">
-            <h2 style="font-size: 3em;">Contact</h2>
-            <p style="font-size: 1.5em;">Email: adresa@email.com</p>
-            <p style="font-size: 1.5em;">Instagram: @username</p>
+Tu ești vindecarea mea
+Aș da orice să fii aici
+Chiar și când viața este grea
+Să-mi fii alături, fără frici. 
+
+Să-ncep să simt iar dragostea
+E un sentiment plăcut 
+Să iubesc iar o dragă stea
+Încep să simt c-am renăscut.
+
+<h3>2. Rămâi</h3>
+Te privesc, ești fericită 
+Cu un trandafir în mână 
+Iar pe cap, mare cunună
+Inima mi-e răzvrătită.  
+
+Ea nu e la fel ca tine
+Nu mai e nici măcar a mea
+Ți-am dat-o-n dar, chiar lâng-a ta
+Amintire de la mine. 
+
+În viață-mi, tu ești culoarea 
+În sufletul meu ești totul
+Iar mintea mea îți e jocul
+Pe cer doar tu ești spledoarea. 
+
+M-ai vrăjit cu al tău parfum
+Și cu chipul ca de zână
+Aș vrea să mă ții de mână 
+Și să urmăm același drum. 
+
+Privesc în urmă, la ce-a fost
+Mă văd pe mine, fericit
+Te văd pe tine, răsărind 
+Dar nu pe noi... și n-are rost 
+
+Să te regăsesc, draga mea
+Deși mi-e dor de-ale tale
+Mici și galbene petale
+Și de ochii-ți ca de stea... 
+
+Dar aș vrea să rămâi mereu
+În viața mea, să te trăiesc
+Prea frumos am să te iubesc 
+O, dulce, trandafirul meu.
+
+<h3>3. Greu</h3>
+Cerul adesea-i mohorât
+Și totu-n jur răsun-a jale
+Sufletu-n tine nu e frânt 
+M-omoară cu mâinile goale. 
+
+Și-n urmă nu te-ai mai uitat..
+Tu ai plecat nepăsătoare
+Îi cer lui Dumnezeu un sfat
+Să nu mai doară așa tare. 
+
+Și printre negrele pansele
+Mă aflu-acum, dezorientat
+Lipsit de viață și putere
+Mă înnegresc neîncetat. 
+
+Oricât aș vrea, simt că nu pot
+Să fiu la fel ca la-nceput
+Din inimă n-am cum să scot 
+Spinii iubirii din trecut. 
+
+Sunt greu ca plumbul, și nu știu 
+Când o să vii, să îmi revin
+Tot sper să plouă purpuriu
+Și tu să schimbi al meu destin.
+
+<h3>4. Lacrimi amare</h3>
+Privesc la tine ca la un tablou
+De ore-n șir, și tot aș continua
+Să te privesc, să te pot studia
+Și să-mi reamintesc al tău ecou. 
+
+Să pot să cred din nou că mă iubești 
+Să ai din nou poarta deschisă
+Rapid să vii, iubirea-i scrisă!
+Gioconda mea, de ce te mai ferești? 
+
+De ce nu vii pe un al-nost drum?
+Și rămâi pe calea greșită
+Fiind pe veci nefericită
+De ce mă lași plângând acum? 
+
+Lacrimi amare ce inundă
+Ușor, sigur inima mea
+Lăsând la urmă praf de stea
+Ce tot încearcă să ascundă 
+
+Dorința de a te revedea
+De când cu forța mi te-a luat
+Lăsând un suflet spulberat
+Ce în trecut cu tine-ardea. 
+
+Îmi tot lipsești, te tot doresc
+Și ce-ți grăiesc în astă-noapte
+Las' vorbele.. caută fapte
+Gioconda mea, cu chip ceresc.
+
+<h3>5. Gheață</h3>
+Flori de gheață-ncet apar
+De mult, la fereastra ta
+Și nu le pot dezbina
+Totu'-n jur devine clar. 
+
+Te-au cuprins multe tulpini
+Ești blocată, draga mea.
+Și nu-mi pot imagina
+Cum de ți-au crescut și spini. 
+
+Nu te mai pot nici picta..
+În jurul meu nu mai găsesc 
+Nicio culoare să-ți pictez
+Ochii, unici, ca de stea. 
+
+Oricât nu mi-ar fi de rău
+Și-oricât mi-ar fi ea de mare..
+Lumea-ntreagă la picioare!
+Mi-ar fi dor de glasul tău. 
+
+Regăsirea n-o găsesc..
+Și nici măcar liniștea 
+Când nu ești în preajma mea..
+Cât să-ți repet că te iubesc?
+
+<h3>6. Steaua noastră</h3>
+Zăresc pe cer, dar prea departe
+Că-ncet se stinge steaua noastră
+Încet se duce.. e pe moarte
+Lumina ei fină, albastră 
+
+Culoare ce o ai și-acum
+În ochii tăi, ce-mi sunt prea dragi
+În care m-aș pierde oricum
+Și parcă mai mult mă atragi... 
+
+Dar dintr-o dată, iar dispari
+Și devii de negăsit
+Doar în vise mai apari
+Încep să cred c-am obosit 
+
+Să caut iar vița de jad
+Între alte flori lipsite
+De mireasma ta. Mă ard
+Sentimente regăsite 
+
+Aprinse din primul moment
+Când ne-am reîmbrățișat 
+Erai al meu medicament
+A fost așa de minunat.. 
+
+Dar extazul m-a trezit
+E noapte iar, privesc la stele 
+Iar steaua noastră a murit
+La fel și speranțele mele.
+
+<h3>7. Nimeni</h3>
+Ești artă. Și nu te pot compara
+Cu nimeni și nimic și-oricât aș încerca 
+N-am cum să te înlocuiesc cândva 
+Nimeni nu are strălucirea ta. 
+
+Nimeni nu mă mai face să zâmbesc 
+Cum o făceai tu odinioară 
+As vrea acum să îți tot vorbesc
+Să o tot fac, seară de seară. 
+
+Mi-e dor să mi te știu aproape
+Și să îmi declari iubire
+Iar din ochii-ți, ca din ape
+Să pornească-acea sclipire. 
+
+Pe care n-o pot uita
+Niciodată, eu mereu
+Îmi voi aminti de ea
+Când va fi să-mi fie greu. 
+
+Ca și-acum. Când nu mai vii
+Și oricât aș încerca 
+Nu pot schimba fundalul gri
+Ce e de-atunci în viața mea. 
+
+Ești cosmos, iar privirea ta
+Pana și-acum mă cucerește 
+Ochii tăi frumoși, de stea
+Sufletul mi-l încălzește. 
+
+Parfumul tău e-ntipărit
+În mine, îmi oferă stări
+Așa ceva n-am mai simțit 
+De la 'cele îmbrățișări 
+
+Ce mă făceau să trăiesc 
+Doar pentru persoana ta
+Ce mă făceau să iubesc
+Cum n-am iubit pe-altcineva. 
+
+Dar ai plecat. Îmi este greu.. 
+Și, deși veacurile-au trecut,
+Mă gândesc la tine mereu
+Mi-e dor de al tău cald sărut. 
+
+Și de atingerea ta fină
+Ce mă induioșa pe loc
+Iar inima mi-era plină
+De iubirea ta, de foc. 
+
+Îmi lipsesc momentele
+Și aș face un compromis
+Să retrăim clipele
+Și real, nu doar în vis. 
+
+Tu să îmi zâmbești din nou
+Iar totu-n jur să fie bine
+Să fii tu al meu erou
+Și să ai grijă de mine, 
+
+Așa cum mi-am imaginat..
+Dar timpul în jur trece
+Lăsându-mă spulberat,
+Neîmplinit și rece.
+
+<h3>8. Lumină (Mama)</h3>
+Când totu-n jur e-ntunecat
+Doar tu, mamă, ești lumina
+Și doar zâmbetul fermecat
+Mă face să-ți vad grădina 
+
+Din suflet, e plină de flori
+Și de iubire e mereu..
+De mireasmă, de culori
+Și-așa mă-nveselesc și eu 
+
+Când știu că prin tine trăiesc
+Și din tine exist acum
+În inimă lalele-mi cresc..
+Prudent urmez doar al tău drum 
+
+Încet, sigur cu pași mărunți
+Dar timpul ne îndepartează
+La fel de-ncet, spre peri cărunți
+Și tot mai mult se-mpuținează.. 
+
+El trece prea ușor de noi
+Și inapoi nu mai privește
+Iar an de an, ia câte doi
+Lăstari de flori și-i ofilește. 
+
+Dar nu vreau să mă gândesc
+Când nu vor mai fi flori deloc
+De-acel moment eu mă feresc
+Mă las ghidat doar de noroc 
+
+Și că în dreapta mea vei fi..
+Vei sta, ca și până acum
+Indiferent că-i noapte, zi
+Că e senin sau că e fum. 
+
+Întiparită am în minte
+Gingașă, doar privirea ta
+Două mărgele mici și sfinte
+Ce-ți definesc iubirea 
+
+Față de viață, de destin
+Deși n-a fost mereu ușor
+Și poate-n vreme de suspin
+Treceai prin tot, făr' de-ajutor. 
+
+Eu te respect și te iubesc
+Solemn, încă din prima zi
+De nimeni eu nu mă feresc
+Când spun că n-aș putea trăi 
+
+Fără să te am cu mine
+În suflet sau în persoană
+Să aibă cine mă susține
+Să port doar a ta icoană 
+
+Chiar dacă timpul ar trece
+Și florile-ți s-ar ofili
+Sufletu-mi, devenit rece
+Numai tu l-ai putea-ncălzi.
+
+<h3>9. Totul</h3>
+Galaxii în jur salută
+Un decor de auroră
+Plin de lauri.. doar o rută
+Spre privirea-ți polifloră 
+
+Și spre veșnicul parfum
+Ce îl porți mereu, de care
+Sunt uimit chiar și acum 
+La a mia-mbățisare.. 
+
+Cu atingerea ta fină
+Mă duci dincolo de nori
+Și potopul poa' să vină
+Mă pierd în lanul de flori 
+
+Din ochii tăi, și tot aș sta..
+Aș sta și te-aș simți aproape
+Aproape de inima mea
+Și în ea să se tot sape 
+
+Gropi pentru laurii tăi..
+Și te-aș avea mereu aproape..
+Dar spune-mi te rog alte căi
+Pentru că am doar jumătate.. 
+
+Cealaltă a rămas la tine
+Și va rămâne tot mereu
+Poate c-așa e cel mai bine
+Deși poate părea prea greu 
+
+De asta aș dori și flori
+Țesute în sufletul meu
+Să fie plin doar de culori
+Nu de regrete și deșeu. 
+
+Dar când din nou mă regăsesc 
+Pierdut.. în pădurea maro
+Din ochii tăi, iarăși greșesc 
+Când mă simt tras la indigo 
+
+Cu zâmbetu-ți, ca de rubin
+Deosebit, roșu-aprins
+Când sunt într-un continuu chin
+Și sunt de tot rece și stins 
+
+Păstrez însă vie speranța 
+Că vei veni, mă vei salva
+Las de o parte aroganța
+Când te afli în preajma mea 
+
+Și când mă vei reaprinde 
+Din cenușă voi renaște
+Și mâna tu imi vei întinde 
+Ținuturi noi le vom cunoaște 
+
+Pe care le vom cuceri
+Împreună, cu lumina
+Și peste care vom domni
+Eu regele și tu regina.
+
+<h3>10. Dolor Amoris</h3>
+E noapte și stelele apar
+Ceru-i senin, senin de mai
+Când îmi zâmbești, mă simt ca-n rai
+Dar nu-i mutual, e în zadar.
+
+Parfum de trandafir, suav
+Buzele tale, roșii-aprins
+Părul negru, de neatins
+Până și profilul ți-i grozav.
+
+Timpul zboară, nu-l pot opri
+În inimă spini ți-au crescut
+Dă-mi voie-acum să te ajut
+Să-i scoatem, să ne putem iubi.
+
+Acol' să crească trandafiri
+Și zi de zi tu să zâmbești
+La mine-n suflet să pornești
+Iar focul unei mari iubiri.
+
+Cu zâmbetul mucegăit
+Acum însă regret enorm
+Seară de seară nu adorm
+Așa momente-am tot trăit.
+
+Dar n-aș putea s-o las așa
+Și să rămânem abătuți
+Să nu fim luați la bani mărunți
+Și tu dragă să fii a mea.
+
+<h3>11. Decor</h3>
+Te regăsesc prin galaxii
+Te recunosc, ușor se vede 
+Că printre albastre, roșii
+Există doar o stea verde. 
+
+Ce strălucire.. e aparte
+Flacăra-ți rece mă cuprinde
+Și-mi duce sufletul departe..
+Un nou decor ce mă surprinde 
+
+Și-mi rupe inima în două
+Una fiind doar cu tine
+Mereu. Dar când afară plouă
+Cealaltă rămâne-n mine 
+
+Fiind tristă și retrasă
+Nici eu n-o pot înțelege 
+Când stă întinsă pe masă
+Și devenind tot mai rece 
+
+Îi lipsești, și nu doar ei
+Aș da orice să fiu cu tine
+Mi-aș vinde sufletul la zei
+Doar ca să ne fie bine 
+
+Și-n clipa cea făr' de sfârșit
+Privirea ta verde-căprui
+Să mă sărute-n asfințit 
+Să nu mai fiu al nimănui.
+
+<h3>12. Ochii tăi</h3>
+Când ochii ți-i privesc adânc
+Și când mă pierd în fantezii
+Mă simt din nou ca un mic prunc
+Și tu mi-ești mama. Tinerii 
+
+Spini ce-mi străpung inima
+Tot cresc și nu se mai opresc
+Dar când mă privești aievea
+Simt că de toți eu mă golesc 
+
+Și îmi amintesc că te-ai născut
+De mult, doar din spuma mării
+Ești un exemplu absolut
+Ce nu îl pot da uitării 
+
+Oricât aș încerca de mult
+Și oricât de tare doare
+Susurul tău des îl ascult 
+Îmi place așa de tare... 
+
+Când îți place să mă vrăjești
+Misterioasă tu fiind
+Nu aș mai vrea să te ferești
+Și să te văd mai des zâmbind... 
+
+Să îți arăți frumusețea
+Ce te definește bine
+Tuturor, iar tinerețea
+Să o ai mereu cu tine 
+
+Iar amândoi, sub verde tei
+Până la ultima suflare
+A mea, până să plec la zei
+Te voi iubi atât de tare 
+
+Încât până și puterea
+Lui Dumnezeu, asupra ta
+Nu-mi poate lua unica stea
+Ce îmi alină durerea 
+
+Și-mi tratează rănile
+Cu blândețe și răbdare
+Nu-mi ajung toate zilele
+Să-ți fac drum pân' la Soare 
+
+Dar ar fi prea invidios
+Că ești mai specială
+Decât el, te-ar lăsa jos
+Ai farmec din cale-afară 
+
+Și toți îl simt, nu numai eu
+Miros subtil parfumul
+De trandafir, ce-l porți mereu
+Și nu ți-aș mai da drumul.. 
+
+Știu că din o mie de flori
+Ți-e greu s-alegi doar una
+Dar viața va trage de sfori
+Și va alege totdeauna 
+
+Ce e mai bine pentru tine
+Știu de mult, e scris în stele
+Mă vei alege pe mine
+Un trandafir printre lalele.
+
+<h3>13. Ochii mei</h3>
+Fantasma vieții e cu mine
+De la-nceput, din totdeauna
+Și oricât mi-ar fi de bine
+În sine-mi domnește furtuna 
+
+Cu ploi care durează ani
+Și picăturile smaralde..
+Apoi, suntem ambii vulcani
+Și aruncăm cu lacrimi calde 
+
+Care topesc totul în jur
+Până și inima-mi de gheață
+Când îți admir zâmbetul pur..
+Apoi s-așterne rapid ceața 
+
+Nu te mai simt, nu te mai văd
+Și sufletul se-nmărmurește
+În ceruri am facut prăpăd
+Și-o nouă planetă crește.. 
+
+E între noi, e doar din noi
+Aici se va afla mereu
+Fie că-i pace sau război
+Ne va lega: doar tu și eu. 
+
+Și va avea multe minuni..
+Șapte, ți le voi construi
+Chit că durează ani sau luni
+Pentru tine voi reuși 
+
+Mă rog să nu te rușinezi
+Când vei veni, le vei vedea
+Și când o să realizezi
+Că tot mai lipsește ceva 
+
+Și nu la construcția lor
+Căci tihnit le-am realizat
+N-au strălucirea stelelor
+Și zâmbetu-ți fermecat. 
+
+Dar dincolo de galaxie
+Avem gânduri viitoare
+Iar în decor de feerie
+Pot să privesc mult la Soare 
+
+Dar la tine dragă, ba
+Ești șarmantă, visătoare
+Și-oricât mi-ar fi viața de grea
+Vin la tine, o-mbrățisare 
+
+Înseamnă mult, înseamnă tot.
+Iar buzele senzuale..
+Sunt dorința c-am să pot
+Să le vreau doar pe-ale tale 
+
+Și mereu, seară de seară
+Îmi doresc să îți pot spune
+Că niciuna nu se compară..
+Tu esti unica-mi minune 
+
+Profund, în ochii mei se vede
+Flacăra, menținând vie
+Iubirea mea ce se tot crede
+Ca ar fi una la o mie 
+
+De ani, decenii sau chiar veacuri
+Ce ți-o tot port, și-o voi purta
+Pentru iubire nu sunt leacuri
+Sunt doar mii voci... ce-or înceta 
+
+Să critice, să ne judece.
+Mai stai o clipă, mai rămâi
+Un moment să ne vindece
+Cireșul de mai, cel dintâi 
+
+Iar din flori să-ți fac cunună
+Ai lumii împărați să fim 
+Fie soare, fie lună 
+Să ne iubim, să înflorim.
+
+<h3>14. Aripi</h3>
+Ce lent ni-i jocul uneori
+Jocul de aripi străvezii
+Opace, făr' alte culori
+Cu sentimente mii și mii
+
+Și dorinte, și trăiri
+Puțin câte puțin se-adună
+Toate se prefac impliniri
+Când grațios mă iei de mână
+
+Față de toți mă simt presus
+Și nimeni nu mai e ca mine
+Până pleci la-infinit apus
+Sufletul, inima-mi-s ruine
+
+A doua zi singur rămân
+O noua viaț-acum incepe
+În lume nu mai sunt stăpân
+Domnesc trăirile sirepe
+
+Eu nu le mai pot opri
+Și deși sunt multe, sunt reci
+Fără tine nu pot popri
+Te vreau lângă mine pe veci
+
+Că din fulgere m-am născut
+Pe-acest Pământ, și tot astept
+Să plouă cu smarald, tăcut
+Pe al meu diamant din piept
+
+Iar cu ploaia și tu să vii
+În dreapta mea să te așezi
+Îngerul meu tu să devii
+De umăr să mi te broșezi
+
+Chiar dacă suntem la fel
+Eu am demoni, deși sunt înger
+Ce fac în suflet doar măcel
+Și mă rănesc ca un străfulger
+
+Dar cu tine, totu-i ușor
+Nici timpul nu mai-i efemer
+Gândind măreț spre viitor
+Și toate temerile pier
+
+Iute ni-i jocul deseori
+Jocul de aripi, renumit
+Aripi în prea multe culori
+Și iubire la infinit.
+
+<h3>15. Lalele</h3>
+E iarnă. Afară și în suflet
+E mult prea frig. Dar m-am obișnuit
+Totu'-n jur, fiind fără de sunet
+Iar eu să rămân trist la infinit 
+
+Admirând, în neaua albă, două
+Lalele negre, ce n-au mai zâmbit
+De mult. Subit începe și le plouă
+E mult prea ud. Dar s-au obișnuit 
+
+Le-a dispărut culoarea, roșul pal
+Le-a dispărut și viața, s-au lăsat
+În voia sorții și n-au câștigat
+Decât o speranță cu gust amar. 
+
+Până și verdele tulpinilor
+Cel regăsit și-n ambii ochii tăi
+Nu e prezent. Încerc pe alte căi
+Termen lung, de criteriul anilor. 
+
+Și în final, cu laurii tăiați
+Mi-aș mai dori, o dată, la sfârșit
+Culoarea înapoi, s-o am la infinit
+Să fim doar noi doi, pe veci îmbrățișați.
+
+<h3>16. Zâmbete</h3>
+Stafia mea în jur respiră
+Din nou, vibrează timpuriu
+Dupa ce ea clar ațipiră
+De prea mult timp, în alb sicriu 
+
+Eu am uitat de toți și toate
+M-am făcut una cu țărâna
+E greu să fiu singur, departe..
+Fără să-ți țin lipită mâna
+
+De a mea, privind la stele
+Să fim doar noi.. fu provizoriu
+Și-n toate momentele grele
+Era doar decor iluzoriu 
+
+Și mă mințeam frumos, mereu..
+Spuneam că o să fie bine
+Dar ploaia făr' de curcubeu
+Stingea incet focul din mine 
+
+Iar tu, Soare, nu mai veneai
+Împărțeai zâmbete în jur
+Numai la mine n-ajungeai
+Mă prefăceam în om obscur 
+
+Încet, încet mă transformam
+Și nu puteam face nimic
+Iar viața mi-o tot consumam
+Fiind doar simplul tău amic. 
+
+Nu simt cum aș putea trăi
+Când știu că mai mult nu se poate
+Din toate zâmbetele gri
+Ce ți le-ofer, vrei colorate... 
+
+Și e destul cât să dispar
+În negura insidioasă
+În sicriul originar
+Alb, ca rochia ta de mireasă.
+
+<h3>17. Mă doare</h3>
+Mă doare. Și nu-i vina ta
+Mă doare că nu știu a pierde,
+Că nu mai ești floarea mea
+A dispărut decorul verde 
+
+Ce îți pictaseră-n detaliu
+Ochii fără de-asemănare
+Pe sticla unui vitraliu
+Păstrându-le-aceeași culoare. 
+
+Dar totu-n jur e înghețat.
+În mine, iarna a venit
+Și decorul s-a schimbat..
+Încep să cred c-am obosit. 
+
+Dar în suflet focul mi s-ațâță
+Când vitraliul îl văd in zare.
+Parcă m-aș face și tărâță..
+Mi-e dor pân' la epuizare 
+
+Totul devine familiar
+Cu totul m-am obișnuit 
+Și-mi aduc aminte iar..
+De cât de mult m-am chinuit 
+
+Până am acceptat situația 
+Și iarna eu s-o mult iubesc
+Având in plan relația..
+E unic, nu-i omenesc 
+
+Sentimentul ce m-apasă
+Când prin zăpadă tu apari
+Esti diferită. Esti crăiasă
+Dar ce văd în ochii-ți rari 
+
+E culoarea. S-a schimbat 
+E rece. Nu mai e la fel
+Dar zâmbetul minunat
+A rămas ca un pastel. 
+
+Și când pe mine mă privești 
+Cu ochii tăi mari verzi și reci
+Mă vrăjești, mă otrăvești
+Iar mai apoi alegi să pleci 
+
+Și oricum mi-ar mai fi în gând 
+Fie iarnă, fie vară 
+Aș prefera să plec, zburând 
+Spre o vreme mai ușoară.
+
+<h3>18. Kareta Hana</h3>
+Simt ticăitul ceasului
+Din inimă până în vene
+Caut cheia succesului
+Pe ale lumii toate scene
+
+Și n-o găsesc; e dificil
+Cand ești complet debusolat
+Să-i fii doar Soarelui umil
+Și n-ai nimic de câștigat
+
+Sunt doar o floare și nu pot
+Să te oblig să mă iubești
+Deși lumina ta e tot..
+În cadrul neclar, doar tu ești
+
+Ușa ce mi se deschide
+Și-n continuare mă ghidează
+Deși ea mereu se conchide
+Sufletu-mi col' se situează.
+
+Simt c-o să mor, mă ofilesc
+Doar pentru a-ți fi mai aproape
+Un sacrificiu pământesc
+Iar petalele-mi filantroape
+
+S-ar pune la cununa ta
+S-o faca și mai frumoasă
+Ca tine n-ar exista
+Vreo stea, așa de luminoasă.
+
+Deși sunt mic, inima-i mare
+E toată plină doar de tine
+Nu-i nevoie de exprimare, 
+De sentimente libertine
+
+Că să îți jur pe veci iubirea
+Știm amândoi că nu se poate
+Fiindcă trăiești cu nemurirea
+Iar eu viu doar pe jumătate..
+
+Lumina ta mi-i dopamina
+Sunt dependent de praf de stea
+Îmi crește brusc adrenalina
+Crezând ca ești deasupra mea
+
+Dar nu-i așa.. iarăși mă mint
+În timp ce stai cu Demiurgi
+Eu stau aici, razele-ți simt
+Doar vag.. și viata îmi expurgi
+
+Dar de ce nu-s pentru tine?
+Mă doare necondiționat
+De dragoste și fericire...
+Sunt gol, tăcut și prea sonat.
+
+Încercând de la o vreme
+Să aflu ceea ce lipsea
+Din lanul plin de crizanteme
+Sunt primul ce va deceda
+
+Și singura lalea din toate
+M-ai plăcut mult, mă preferai
+Și când restul erau uscate
+Mă udai, mă lumineai
+
+Mă îngrijeai și mă fereai
+Să nu ajung cumva ca ei
+Dar noaptea tu călătoreai
+Și te iubeai cu Dumnezei.
+
+Sunt într-o buclă temporală
+Din care nu voi mai ieși
+Am și gândirea imorală
+Până ce vei mai reveni..
+
+Sau poate nu, doar tu decizi.
+Monotonia-i similară
+Cum n-a mai fost de mult. Acizi
+Mă ard. Și inima mi-i goală,
+
+Palidă, fără culoare
+Stă întinsă, așteptând
+Ținând strâns de tot. Petale
+Vor să plece, și zburând
+
+S-ajungă la tine-n sicriu
+Unde nu are loc nici luna.
+Noi doi, decorul alburiu.
+Mereu, pentru totdeauna.
         </div>
+        <button class="back-btn" onclick="nav('home')">înapoi</button>
     </div>
 
-    <!-- ZONE DINAMICE DE CITIRE -->
-    <div id="zone-citire" style="display: none;">
-        
-        <div id="page-infinit" class="inner-page-padding container" style="display: none;">
-            <h1 class="fade-in-scroll">INFINIT</h1>
-            <p class="fade-in-scroll">Selectează un capitol pentru a explora poeziile.</p>
-            <div class="volume-grid fade-in-scroll">
-                <button class="vol-btn" onclick="openVolum('infinit-capitolul-1')">Capitolul 1 - Realizare</button>
-                <button class="vol-btn" onclick="openVolum('infinit-capitolul-2')">Capitolul 2 - Acceptare</button>
-                <button class="vol-btn" onclick="openVolum('infinit-capitolul-3')">Capitolul 3 - Renaștere</button>
-            </div>
-            <button class="btn-actiune fade-in-scroll" style="margin-top: 40px;" onclick="inchideCititor()">Înapoi la Pagina Principală</button>
+    <!-- VOLUMUL INFINIT -->
+    <div id="vol-infinit" class="view">
+        <h2>INFINIT</h2>
+        <div class="poem-container">
+            <!-- Conținut Infinit -->
         </div>
-
-        <div id="page-volum" class="inner-page-padding container" style="display: none;">
-            <h1 id="titlu-volum" class="fade-in-scroll">NUME VOLUM</h1>
-            
-            <div id="ecran-cuprins" class="fade-in-scroll">
-                <div class="actiuni-volum">
-                    <button class="btn-actiune" onclick="citesteIntegral()">Citește integral</button>
-                </div>
-                <div id="grid-cuprins" class="cuprins-grid"></div>
-                <button class="btn-actiune" style="margin-top: 40px;" onclick="inchideCititor()">Înapoi la Pagina Principală</button>
-            </div>
-
-            <div id="ecran-cititor" style="display: none;">
-                <div class="cititor">
-                    <div id="continut-poezie-animat">
-                        <h2 id="titlu-poezie" style="color: #bb86fc; margin-bottom: 30px; font-size: 2em;"></h2>
-                        <div id="text-poezie" class="poezie-text"></div>
-                    </div>
-                    
-                    <div class="navigatie-cititor fade-in-scroll">
-                        <button class="btn-actiune" id="btn-prev" onclick="prevPoezie()">◄ Anterioara</button>
-                        <button class="btn-actiune" onclick="inapoiLaCuprins()">Înapoi la listă</button>
-                        <button class="btn-actiune" id="btn-next" onclick="nextPoezie()">Următoarea ►</button>
-                        
-                        <button class="btn-actiune btn-special" id="btn-continua" style="display: none;" onclick="continuaLectura()"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <button class="back-btn" onclick="nav('home')">înapoi</button>
     </div>
 
-    <!-- BAZA DE DATE CU POEZII -->
-    <div id="baza-de-date" style="display: none;">
-        
-        <!-- Volumul 18 (18 poezii) -->
-        <div id="data-18">
-            <div class="poem-item"><div class="titlu">1. Prima poezie</div><div class="versuri">Conținut poezie 1...</div></div>
-            <div class="poem-item"><div class="titlu">2. A doua poezie</div><div class="versuri">Conținut poezie 2...</div></div>
-            <div class="poem-item"><div class="titlu">3. A treia poezie</div><div class="versuri">Conținut poezie 3...</div></div>
-            <div class="poem-item"><div class="titlu">4. Poezia 4</div><div class="versuri">Conținut poezie 4...</div></div>
-            <div class="poem-item"><div class="titlu">5. Poezia 5</div><div class="versuri">Conținut poezie 5...</div></div>
-            <div class="poem-item"><div class="titlu">6. Poezia 6</div><div class="versuri">Conținut poezie 6...</div></div>
-            <div class="poem-item"><div class="titlu">7. Poezia 7</div><div class="versuri">Conținut poezie 7...</div></div>
-            <div class="poem-item"><div class="titlu">8. Poezia 8</div><div class="versuri">Conținut poezie 8...</div></div>
-            <div class="poem-item"><div class="titlu">9. Poezia 9</div><div class="versuri">Conținut poezie 9...</div></div>
-            <div class="poem-item"><div class="titlu">10. Poezia 10</div><div class="versuri">Conținut poezie 10...</div></div>
-            <div class="poem-item"><div class="titlu">11. Poezia 11</div><div class="versuri">Conținut poezie 11...</div></div>
-            <div class="poem-item"><div class="titlu">12. Poezia 12</div><div class="versuri">Conținut poezie 12...</div></div>
-            <div class="poem-item"><div class="titlu">13. Poezia 13</div><div class="versuri">Conținut poezie 13...</div></div>
-            <div class="poem-item"><div class="titlu">14. Poezia 14</div><div class="versuri">Conținut poezie 14...</div></div>
-            <div class="poem-item"><div class="titlu">15. Poezia 15</div><div class="versuri">Conținut poezie 15...</div></div>
-            <div class="poem-item"><div class="titlu">16. Poezia 16</div><div class="versuri">Conținut poezie 16...</div></div>
-            <div class="poem-item"><div class="titlu">17. Poezia 17</div><div class="versuri">Conținut poezie 17...</div></div>
-            <div class="poem-item"><div class="titlu">18. Ultima poezie (18)</div><div class="versuri">Sfârșitul volumului 18.</div></div>
+    <!-- VOLUMUL FLORALIA -->
+    <div id="vol-floralia" class="view">
+        <h2>FLORALIA</h2>
+        <div class="poem-container">
+            <!-- Conținut Floralia -->
         </div>
-
-        <!-- INFINIT Cap 1 (8 poezii) -->
-        <div id="data-infinit-capitolul-1">
-            <div class="poem-item"><div class="titlu">1. Poezie Cap 1</div><div class="versuri">Versuri din capitolul 1...</div></div>
-            <div class="poem-item"><div class="titlu">2. Poezie Cap 1</div><div class="versuri">Versuri din capitolul 1...</div></div>
-            <div class="poem-item"><div class="titlu">3. Poezie Cap 1</div><div class="versuri">Versuri din capitolul 1...</div></div>
-            <div class="poem-item"><div class="titlu">4. Poezie Cap 1</div><div class="versuri">Versuri din capitolul 1...</div></div>
-            <div class="poem-item"><div class="titlu">5. Poezie Cap 1</div><div class="versuri">Versuri din capitolul 1...</div></div>
-            <div class="poem-item"><div class="titlu">6. Poezie Cap 1</div><div class="versuri">Versuri din capitolul 1...</div></div>
-            <div class="poem-item"><div class="titlu">7. Poezie Cap 1</div><div class="versuri">Versuri din capitolul 1...</div></div>
-            <div class="poem-item"><div class="titlu">8. Final Realizare</div><div class="versuri">Sfârșitul Capitolului 1.</div></div>
-        </div>
-
-        <!-- INFINIT Cap 2 (6 poezii) -->
-        <div id="data-infinit-capitolul-2">
-            <div class="poem-item"><div class="titlu">1. Poezie Cap 2</div><div class="versuri">Versuri din capitolul 2...</div></div>
-            <div class="poem-item"><div class="titlu">2. Poezie Cap 2</div><div class="versuri">Versuri din capitolul 2...</div></div>
-            <div class="poem-item"><div class="titlu">3. Poezie Cap 2</div><div class="versuri">Versuri din capitolul 2...</div></div>
-            <div class="poem-item"><div class="titlu">4. Poezie Cap 2</div><div class="versuri">Versuri din capitolul 2...</div></div>
-            <div class="poem-item"><div class="titlu">5. Poezie Cap 2</div><div class="versuri">Versuri din capitolul 2...</div></div>
-            <div class="poem-item"><div class="titlu">6. Final Acceptare</div><div class="versuri">Sfârșitul Capitolului 2.</div></div>
-        </div>
-
-        <!-- INFINIT Cap 3 (10 poezii) -->
-        <div id="data-infinit-capitolul-3">
-            <div class="poem-item"><div class="titlu">1. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">2. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">3. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">4. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">5. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">6. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">7. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">8. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">9. Poezie Cap 3</div><div class="versuri">Versuri din capitolul 3...</div></div>
-            <div class="poem-item"><div class="titlu">10. Final Renaștere</div><div class="versuri">Sfârșitul Capitolului 3.</div></div>
-        </div>
-
-        <!-- FLORALIA (6 poezii INTEGRATE) -->
-        <div id="data-floralia">
-            <div class="poem-item">
-                <div class="titlu">Calliope</div>
-                <div class="versuri">Din întâmplare ai apărut
-În viața mea ce-i o furtună..
-Și-mi dai mereu o stare bună
-E un sentiment plăcut
-
-Când știu că ești lângă mine.
-Și când senin tu îmi zâmbești
-Cum să nu simți că înflorești?
-Simt primăvara cum vine..
-
-Totul în jur a înverzit
-S-aude orga în fundal
-Și chiar de sună madrigal
-Doar ochii tăi m-au liniștit.</div>
-            </div>
-            
-            <div class="poem-item">
-                <div class="titlu">Rapsodie</div>
-                <div class="versuri">Ciocârlie, ciocârlie
-Ce veste-mi aduci tu mie?
-Dezbinare sau unire
-Iubire sau amăgire?
-
-Vântul bate, nu s-oprește
-Prin câmpuri mândre de lalele
-Că e senin sau că sunt stele
-Iubirea în el tot crește
-
-Și pare că va continua
-S-adie ca-ntotdeauna
-Până când vor îmbrăca
-Ea rochia și el cununa.</div>
-            </div>
-            
-            <div class="poem-item">
-                <div class="titlu">Inefabil</div>
-                <div class="versuri">Când văd în jur tot înflorit
-Și smaraldul din ochii tăi
-În piept puternice bătăi
-Mă simt cel mai fericit.
-
-Când miros al tău parfum
-Și când îți simt atingerea
-Mereu când ești în preajma mea
-Se-nseninează al meu drum.
-
-Când totu-n jur e palpabil
-Și buzele eu îți sărut
-Nu-mi trebuie nimic mai mult
-Tot ce simt e inefabil.</div>
-            </div>
-            
-            <div class="poem-item">
-                <div class="titlu">Nectar</div>
-                <div class="versuri">De când florile au renăscut
-Boarea în viață-mi s-a așternut 
-Și chiar de pare de necrezut
-Se-ntâmplă de când ai apărut
-
-Chiar de la prima intâlnire
-Simt o întreagă regăsire
-Ce pare că n-are oprire
-Tinde spre a noastră unire
-
-Cu nuanțe dulci, ca de nectar
-Iubirea mea fără de hotar
-Strânsă-n cupe de mărgăritar
-Ți-o voi oferi mereu în dar.</div>
-            </div>
-            
-            <div class="poem-item">
-                <div class="titlu">Atemporal</div>
-                <div class="versuri">În câmpul plin de violete
-Se-mbină dorul și speranța
-Iubirea și siguranța
-În îmbrățisări discrete
-
-Vântul bate ca niciodată
-Până și clepsidra s-a spart
-Nici fluturii nu ne mai despart
-Zarva din jur de tot uitată
-
-Când să te strâng în brațe aleg
-Parcă timpul stă mereu pe loc
-Și dacă-n viață-i despre noroc
-Mă bucur că suntem un întreg.</div>
-            </div>
-            
-            <div class="poem-item">
-                <div class="titlu">Flora</div>
-                <div class="versuri">Din mulțimea cea numeroasă
-În decor de ape cristaline
-Sortită să fii lângă mine
-Te-am ales să-mi fii mireasă
-
-Cu buchet din roșii lalele
-Și în suflet cu un mare foc
-Timpul din nou parcă stă în loc
-Să mergem să culegem stele!
-
-Bobocii de crin au înflorit
-Adânc, în sufletul meu
-Pășim pe același curcubeu
-De la apus, pân' la răsărit.</div>
-            </div>
-        </div>
+        <button class="back-btn" onclick="nav('home')">înapoi</button>
     </div>
 
     <script>
-        let poeziiCurente = [];
-        let indexCurent = 0;
-        let volumCurentId = ''; 
-
-        if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
-        window.onload = function() { window.scrollTo(0, 0); };
-
-        window.addEventListener('scroll', function() {
-            let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            let scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let progress = (scrollTop / scrollHeight) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
-
-            var backToTopBtn = document.getElementById('backToTop');
-            if (scrollTop > 400) {
-                backToTopBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-            }
-        });
-
-        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        
-        function scrollLa(idElement) {
-            if (document.getElementById('main-page').style.display === 'none') {
-                document.getElementById('zone-citire').style.display = 'none';
-                document.getElementById('main-page').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById(idElement).scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 10);
-            } else {
-                document.getElementById(idElement).scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+        function nav(targetId) {
+            document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+            setTimeout(() => {
+                document.getElementById(targetId).classList.add('active');
+            }, 30);
         }
-
-        // Atașăm noul efect de apariție elementelor din DOM
-        function triggerScrollReveal() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        entry.target.classList.add('in-focus');
-                    } else {
-                        entry.target.classList.remove('in-focus');
-                    }
-                });
-            }, { threshold: 0.15 });
-
-            document.querySelectorAll('.vol-section, .fade-in-scroll').forEach(section => { 
-                observer.observe(section); 
-            });
-        }
-
-        function openVolum(idVolum, startLectura = false) {
-            volumCurentId = idVolum;
-            document.getElementById('main-page').style.display = 'none';
-            document.getElementById('zone-citire').style.display = 'block';
-            
-            document.getElementById('page-infinit').style.display = 'none';
-            document.getElementById('page-volum').style.display = 'block';
-            
-            let titluFormatat = idVolum.replace(/-/g, ' ').toUpperCase();
-            document.getElementById('titlu-volum').innerText = titluFormatat;
-
-            let containere = document.querySelectorAll('#data-' + idVolum + ' .poem-item');
-            poeziiCurente = Array.from(containere).map(el => ({
-                titlu: el.querySelector('.titlu').innerText,
-                versuri: el.querySelector('.versuri').innerText
-            }));
-
-            let grid = document.getElementById('grid-cuprins');
-            grid.innerHTML = '';
-            poeziiCurente.forEach((poezie, i) => {
-                let btn = document.createElement('button');
-                btn.className = 'btn-poezie fade-in-scroll';
-                btn.innerText = poezie.titlu;
-                btn.onclick = () => afiseazaPoezie(i);
-                grid.appendChild(btn);
-            });
-
-            if (startLectura) {
-                afiseazaPoezie(0);
-            } else {
-                document.getElementById('ecran-cuprins').style.display = 'block';
-                document.getElementById('ecran-cititor').style.display = 'none';
-                window.scrollTo(0, 0); 
-            }
-            
-            // Re-aplicăm efectul de apariție pe butoanele abia generate
-            setTimeout(triggerScrollReveal, 100);
-        }
-
-        function openInfinitChapters() {
-            document.getElementById('main-page').style.display = 'none';
-            document.getElementById('zone-citire').style.display = 'block';
-            document.getElementById('page-volum').style.display = 'none';
-            document.getElementById('page-infinit').style.display = 'block';
-            window.scrollTo(0, 0);
-            setTimeout(triggerScrollReveal, 100);
-        }
-
-        function inchideCititor() { scrollLa('sectiune-despre'); }
-
-        function citesteIntegral() { if (poeziiCurente.length > 0) afiseazaPoezie(0); }
-
-        function inapoiLaCuprins() {
-            document.getElementById('ecran-cuprins').style.display = 'block';
-            document.getElementById('ecran-cititor').style.display = 'none';
-            window.scrollTo(0, 0);
-        }
-
-        function afiseazaPoezie(index) {
-            indexCurent = index;
-            document.getElementById('ecran-cuprins').style.display = 'none';
-            document.getElementById('ecran-cititor').style.display = 'block';
-            
-            let containerAnimat = document.getElementById('continut-poezie-animat');
-            containerAnimat.classList.remove('animate-poem');
-            void containerAnimat.offsetWidth; 
-            
-            document.getElementById('titlu-poezie').innerText = poeziiCurente[index].titlu;
-            document.getElementById('text-poezie').innerText = poeziiCurente[index].versuri;
-            
-            containerAnimat.classList.add('animate-poem');
-
-            document.getElementById('btn-prev').style.display = index > 0 ? 'inline-block' : 'none';
-            
-            let btnNext = document.getElementById('btn-next');
-            let btnContinua = document.getElementById('btn-continua');
-            
-            if (index < poeziiCurente.length - 1) {
-                btnNext.style.display = 'inline-block';
-                btnContinua.style.display = 'none';
-            } else {
-                btnNext.style.display = 'none';
-                btnContinua.style.display = 'inline-block';
-                seteazaButonContinuare(btnContinua);
-            }
-            
-            window.scrollTo(0, 0); 
-            setTimeout(triggerScrollReveal, 100);
-        }
-
-        function nextPoezie() { if (indexCurent < poeziiCurente.length - 1) afiseazaPoezie(indexCurent + 1); }
-        function prevPoezie() { if (indexCurent > 0) afiseazaPoezie(indexCurent - 1); }
-
-        function seteazaButonContinuare(buton) {
-            if (volumCurentId === '18') {
-                buton.innerText = "Continuă lectura cu INFINIT (Cap. 1 - Realizare) ►";
-                buton.onclick = () => openVolum('infinit-capitolul-1', true);
-            } else if (volumCurentId === 'infinit-capitolul-1') {
-                buton.innerText = "Continuă lectura cu Capitolul 2 - Acceptare ►";
-                buton.onclick = () => openVolum('infinit-capitolul-2', true);
-            } else if (volumCurentId === 'infinit-capitolul-2') {
-                buton.innerText = "Continuă lectura cu Capitolul 3 - Renaștere ►";
-                buton.onclick = () => openVolum('infinit-capitolul-3', true);
-            } else if (volumCurentId === 'infinit-capitolul-3') {
-                buton.innerText = "Continuă lectura cu FLORALIA ►";
-                buton.onclick = () => openVolum('floralia', true);
-            } else if (volumCurentId === 'floralia') {
-                buton.innerText = "Înapoi la pagina principală";
-                buton.onclick = () => inchideCititor();
-            }
-        }
-
-        // Activăm Intersection Observer-ul la prima încărcare
-        document.addEventListener('DOMContentLoaded', triggerScrollReveal);
     </script>
 </body>
 </html>
