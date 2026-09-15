@@ -18,11 +18,11 @@
         }
         
         /* ---------------------------------------------------
-           BARĂ DE PROGRES LA SCROLL
+           BARĂ DE PROGRES LA SCROLL (Mutată JOS)
         ---------------------------------------------------- */
         #progress-bar {
             position: fixed;
-            top: 0;
+            bottom: 0; /* Aici am mutat bara jos */
             left: 0;
             height: 4px;
             background-color: #bb86fc;
@@ -32,7 +32,7 @@
             transition: width 0.1s ease-out;
         }
 
-        /* Animație pentru citirea poeziilor */
+        /* Animație scurtă și fină pentru citirea poeziilor */
         @keyframes fadeInPoem {
             0% { opacity: 0; transform: translateX(10px); }
             100% { opacity: 1; transform: translateX(0); }
@@ -271,7 +271,7 @@
 </head>
 <body>
 
-    <!-- BARĂ DE PROGRES -->
+    <!-- BARĂ DE PROGRES (Afișată jos) -->
     <div id="progress-bar"></div>
 
     <!-- BUTON SCROLL TO TOP -->
@@ -479,7 +479,6 @@
             document.getElementById('ecran-cititor').style.display = 'none';
 
             setTimeout(() => {
-                // SALT INSTANT în loc de smooth scroll
                 document.getElementById('zone-citire').scrollIntoView({ behavior: 'auto', block: 'start' });
             }, 50);
         }
