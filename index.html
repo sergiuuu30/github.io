@@ -134,6 +134,8 @@
         .inner-page-padding { padding-top: 100px; padding-bottom: 60px; }
         
         .volume-grid { display: flex; gap: 20px; justify-content: space-between; margin-top: 40px; }
+        
+        /* Butoanele pentru capitole */
         .vol-btn {
             flex: 1; padding: 80px 20px; font-size: 2.2em; font-weight: bold; background-color: #2a2438;
             color: #bb86fc; border: 2px solid #bb86fc; border-radius: 8px; cursor: pointer; transition: 0.3s; font-family: inherit;
@@ -151,19 +153,37 @@
         }
         .btn-special:hover { background-color: #ffcc80; box-shadow: 0 0 20px rgba(255, 183, 77, 0.6); }
         
-        /* Grila inteligentă pentru capitole (3 pe rând, se centrează automat rămășițele) */
+        /* Grila inteligentă pentru BUTOANELE PĂTRATE de poezii */
         .cuprins-grid { 
             display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; 
             max-width: 900px; margin: 0 auto;
         }
         
         .btn-poezie {
-            background-color: #2a2438; color: #e0e0e0; border: 1px solid #bb86fc; padding: 20px; 
-            flex: 0 0 calc(33.333% - 14px); /* Calcul pentru 3 pe rând (33% minus gap-ul) */
-            box-sizing: border-box; font-size: 1.1em; font-weight: bold; cursor: pointer; 
-            border-radius: 8px; transition: 0.3s; font-family: inherit;
+            background-color: #2a2438; 
+            color: #e0e0e0; 
+            border: 1px solid #bb86fc; 
+            padding: 20px; 
+            flex: 0 0 calc(33.333% - 14px); /* Păstrăm formatul pe 3 coloane */
+            aspect-ratio: 1 / 1; /* FACE BUTONUL PĂTRAT PERFECT */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box; 
+            font-size: 1.4em; /* Font mărit */
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 15px; /* Colțuri ușor rotunjite */
+            transition: all 0.3s ease; 
+            font-family: inherit;
         }
-        .btn-poezie:hover { background-color: #433959; }
+        .btn-poezie:hover { 
+            background-color: #bb86fc; 
+            color: #141218; 
+            transform: scale(1.05); /* Efect de mărire la hover */
+            box-shadow: 0 10px 20px rgba(187, 134, 252, 0.4); 
+        }
         
         .cititor { text-align: left; max-width: 600px; margin: auto; }
         .poezie-text { 
@@ -178,7 +198,14 @@
             .vol-info { margin: 0 5%; padding: 20px; }
             .volume-grid { flex-direction: column; }
             .vol-btn { padding: 40px 20px; font-size: 1.8em; }
-            .btn-poezie { flex: 0 0 100%; } /* Pe telefon stau una sub alta perfect */
+            
+            /* Ajustare pentru telefon */
+            .btn-poezie { 
+                flex: 0 0 100%; 
+                aspect-ratio: auto; /* Anulăm aspectul pătrat pe telefon ca să nu ocupe tot ecranul */
+                min-height: 120px; 
+            } 
+            
             .vol-titlu { font-size: 3em; }
             .vol-desc { font-size: 1.2em; }
         }
@@ -200,7 +227,7 @@
         <div class="navbar">
             <a onclick="scrollLa('sectiune-despre')">Despre mine</a>
             <div class="dropdown">
-                <button class="dropbtn">Volume</button>
+                <button class="dropbtn" onclick="scrollLa('volum-18')">Volume</button>
                 <div class="dropdown-content">
                     <a onclick="scrollLa('volum-18')">18</a>
                     <a onclick="scrollLa('volum-infinit')">INFINIT</a>
@@ -280,7 +307,6 @@
                         <button class="btn-actiune" onclick="inapoiLaCuprins()">Înapoi la listă</button>
                         <button class="btn-actiune" id="btn-next" onclick="nextPoezie()">Următoarea ►</button>
                         
-                        <!-- Buton special care apare doar la ultima poezie -->
                         <button class="btn-actiune btn-special" id="btn-continua" style="display: none;" onclick="continuaLectura()"></button>
                     </div>
                 </div>
@@ -370,7 +396,7 @@
     <script>
         let poeziiCurente = [];
         let indexCurent = 0;
-        let volumCurentId = ''; // Salvează volumul activ pentru butonul de "Continuă"
+        let volumCurentId = ''; 
 
         if (history.scrollRestoration) { history.scrollRestoration = 'manual'; }
         window.onload = function() { window.scrollTo(0, 0); };
@@ -460,18 +486,15 @@
             
             containerAnimat.classList.add('animate-poem');
 
-            // Logica butoanelor de Anterioara/Urmatoarea
             document.getElementById('btn-prev').style.display = index > 0 ? 'inline-block' : 'none';
             
             let btnNext = document.getElementById('btn-next');
             let btnContinua = document.getElementById('btn-continua');
             
-            // Dacă nu e ultima poezie
             if (index < poeziiCurente.length - 1) {
                 btnNext.style.display = 'inline-block';
                 btnContinua.style.display = 'none';
             } else {
-                // Dacă este ultima poezie, activează butonul de continuare automat
                 btnNext.style.display = 'none';
                 btnContinua.style.display = 'inline-block';
                 seteazaButonContinuare(btnContinua);
