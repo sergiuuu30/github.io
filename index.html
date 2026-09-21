@@ -144,7 +144,8 @@
 
         #volum-18 { background-image: url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=1920&q=80'); }
         #volum-infinit { background-image: url('https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=1920&q=80'); }
-        #volum-floralia { background-image: url('flora.jpg'); background-position: top center; }
+        /* Noua imagine pentru FLORALIA luată de pe Unsplash */
+        #volum-floralia { background-image: url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1920&q=80'); background-position: center; }
 
         /* ZONA DE CITIRE */
         #zone-citire { background-color: #1e1b24; padding-bottom: 60px; min-height: 100vh; }
@@ -168,16 +169,19 @@
         }
         .btn-special:hover { background-color: #ffcc80; box-shadow: 0 0 20px rgba(255, 183, 77, 0.6); }
         
-        /* Grila inteligentă pentru BUTOANELE PĂTRATE de poezii */
+        /* Grila inteligentă pentru BUTOANELE PĂTRATE de poezii (Făcute mai mari) */
         .cuprins-grid { 
-            display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; 
-            max-width: 900px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px; 
+            max-width: 1050px; 
+            margin: 0 auto;
         }
         
         .btn-poezie {
             background-color: #2a2438; color: #e0e0e0; border: 1px solid #bb86fc; padding: 20px; 
-            flex: 0 0 calc(33.333% - 14px); aspect-ratio: 1 / 1; display: flex; justify-content: center;
-            align-items: center; text-align: center; box-sizing: border-box; font-size: 1.4em;
+            aspect-ratio: 1 / 1; display: flex; justify-content: center;
+            align-items: center; text-align: center; box-sizing: border-box; font-size: 1.7em;
             font-weight: bold; cursor: pointer; border-radius: 15px; transition: all 0.3s ease; font-family: inherit;
         }
         .btn-poezie:hover { 
@@ -210,7 +214,8 @@
             .vol-info { margin: 0 5%; padding: 20px; }
             .volume-grid { flex-direction: column; }
             .vol-btn { padding: 40px 20px; font-size: 1.8em; }
-            .btn-poezie { flex: 0 0 100%; aspect-ratio: auto; min-height: 120px; } 
+            .cuprins-grid { grid-template-columns: repeat(auto-fit, minmax(100%, 1fr)); }
+            .btn-poezie { aspect-ratio: auto; min-height: 140px; font-size: 1.5em; } 
             .vol-titlu { font-size: 3em; }
             .vol-desc { font-size: 1.2em; }
             .poezie-text { font-size: 1.3em; }
@@ -314,7 +319,7 @@
             <div id="ecran-cititor" style="display: none;">
                 <div class="cititor">
                     <div id="continut-poezie-animat">
-                        <h2 id="titlu-poezie" style="color: #bb86fc; margin-bottom: 30px; font-size: 2em;"></h2>
+                        <h2 id="titlu-poezie" style="color: #bb86fc; margin-bottom: 30px; font-size: 2.5em;"></h2>
                         <div id="text-poezie" class="poezie-text"></div>
                     </div>
                     
@@ -1041,7 +1046,7 @@ Mă prefăceam în om obscur
 Încet, încet mă transformam
 Și nu puteam face nimic
 Iar viața mi-o tot consumam
-Fiind doar simplul tău amic.      
+Fiind doar simplul tău amic.    
 
 Nu simt cum aș putea trăi
 Când știu că mai mult nu se poate
@@ -1203,12 +1208,12 @@ Cu amintiri de mult uitate
 În bula-nchisă-n infinit
 Ce singur iar o voi străbate 
                 
-E lumea celor fără soț               
+E lumea celor fără soț                
 Celor cu mii și mii de frici..
 Unde n-a călcat vreodată hoț
 Atunci.. tu ce cauți aici? 
                 
-Vrei să mi-o innapoiezi?               
+Vrei să mi-o innapoiezi?                
 Da.. ziceam de inimă
 Las-o și pleacă, tu ce crezi..
 Că-mi doresc iar o patimă? 
@@ -1818,6 +1823,7 @@ De la apus, pân' la răsărit.</div>
             
             let titluFormatat = idVolum.replace(/-/g, ' ').toUpperCase();
             document.getElementById('titlu-volum').innerText = titluFormatat;
+            document.getElementById('titlu-volum').style.display = 'block'; // Ne asigurăm că titlul apare când deschizi volumul
 
             let containere = document.querySelectorAll('#data-' + idVolum + ' .poem-item');
             poeziiCurente = Array.from(containere).map(el => ({
@@ -1863,6 +1869,7 @@ De la apus, pân' la răsărit.</div>
         function inapoiLaCuprins() {
             document.getElementById('ecran-cuprins').style.display = 'block';
             document.getElementById('ecran-cititor').style.display = 'none';
+            document.getElementById('titlu-volum').style.display = 'block'; // Afișăm înapoi titlul volumului în cuprins
             window.scrollTo(0, 0);
         }
 
@@ -1870,6 +1877,7 @@ De la apus, pân' la răsărit.</div>
             indexCurent = index;
             document.getElementById('ecran-cuprins').style.display = 'none';
             document.getElementById('ecran-cititor').style.display = 'block';
+            document.getElementById('titlu-volum').style.display = 'none'; // Ascundem titlul volumului când citim
             
             let containerAnimat = document.getElementById('continut-poezie-animat');
             containerAnimat.classList.remove('animate-poem');
